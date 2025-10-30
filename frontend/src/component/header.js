@@ -1,0 +1,97 @@
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
+import useCart from "../context/cart-context";
+
+export default function Header() {
+  const navigate = useNavigate();
+  const [searchName, setSearchName] = useState("");
+
+  const { cartItems } = useCart();
+
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  
+  const handleSearch = () => {
+  fetch(`http://localhost:8000/products/search/${searchName}`)
+    .then((res) => res.json())
+    .then((data) => {
+      navigate("/products", { state: { result: data } });
+    })
+    .catch((err) => console.error("Failed to search:", err));
+};
+
+  return (
+    <header className="fixed top-0 left-0 w-full z-50 bg-white px-4 md:px-10 lg:px-40 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-primary/30 py-3">
+      <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 text-secondary">
+          <div className="size-8">
+            <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0_6_319)">
+                <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" />
+              </g>
+              <defs>
+                <clipPath id="clip0_6_319">
+                  <rect fill="white" height="48" width="48" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+          <h2 className="text-secondary text-2xl font-bold leading-tight tracking-[-0.015em]">FreshMilk</h2>
+        </div>
+
+        <nav className="hidden md:flex items-center gap-9">
+          <button
+            className="text-text-color text-base font-medium leading-normal hover:text-primary"
+            onClick={() => navigate("/")}
+          >
+            Home
+          </button>
+          <button
+            className="text-text-color text-base font-medium leading-normal hover:text-primary"
+            onClick={() => navigate("/products")}
+          >
+            Products
+          </button>
+        </nav>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <label className="flex flex-col min-w-40 !h-10 max-w-sm w-full">
+          <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
+            <div onClick={handleSearch} className="text-text-secondary dark:text-gray-400 flex border-none bg-gray-100 dark:bg-gray-800 items-center justify-center pl-4 rounded-l-lg border-r-0">
+              <span className="material-symbols-outlined">search</span>
+            </div>
+            <input
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-text-main dark:text-white focus:outline-none focus:ring-2 focus:ring-primary border-none bg-gray-100 dark:bg-gray-800 h-full placeholder:text-text-secondary dark:placeholder-gray-400 px-4 text-base font-normal leading-normal"
+              placeholder="Search for 'Milk'"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch();
+              }}
+            />
+          </div>
+        </label>
+        
+
+        <button
+          className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors"
+          onClick={() => navigate("/cart")}
+        >
+          <span className="material-symbols-outlined">shopping_cart</span>
+          {totalItems > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              {totalItems}
+            </span>
+          )}
+        </button>
+
+
+        <button className="md:hidden flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
+          <span className="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+    </header>
+
+  );
+}
