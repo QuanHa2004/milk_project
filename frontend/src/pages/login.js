@@ -44,10 +44,10 @@ export default function Login() {
       const data = await response.json();
 
       localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("role", data.role);
+      localStorage.setItem("role", data.role_id);
 
       alert("Đăng nhập thành công!");
-      if (data.role === "admin") {
+      if (data.role_id === 1) {
         navigate("/admin/dashboard");
       } else {
         navigate("/home");

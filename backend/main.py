@@ -97,14 +97,16 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     # Tạo token
     access_token = create_access_token(
-        data={"sub": user.email, "role": user.role_id},
-        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        data={"sub": user.email, "role_id": user.role_id},
+
+
+
     )
 
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "role": user.role_id,
+        "role_id": user.role_id,
         "email": user.email,
     }
 
