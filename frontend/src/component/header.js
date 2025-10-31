@@ -42,7 +42,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-9">
           <button
             className="text-text-color text-base font-medium leading-normal hover:text-primary"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             Home
           </button>

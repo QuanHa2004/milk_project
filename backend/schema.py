@@ -1,15 +1,25 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
-from datetime import datetime
+# ================================
+# schema.py
+# ================================
+from pydantic import BaseModel, EmailStr, Field, validator
+from typing import List, Optional
+from datetime import datetime, date
 from enum import Enum
 
-# ------------------------------
-# ENUM types
-# ------------------------------
+
+# ======================
+# ENUMS
+# ======================
+class DiscountType(str, Enum):
+    percent = "percent"
+    fixed = "fixed"
+
+
 class FeedbackStatus(str, Enum):
     pending = "pending"
     in_progress = "in_progress"
     resolved = "resolved"
+
 
 class OrderStatus(str, Enum):
     pending = "pending"
@@ -17,35 +27,45 @@ class OrderStatus(str, Enum):
     delivered = "delivered"
     cancelled = "cancelled"
 
-class DiscountType(str, Enum):
-    percent = "percent"
-    fixed = "fixed"
 
-# ------------------------------
+# ======================
+# ROLE
+# ======================
+class RoleBase(BaseModel):
+    role_name: str
+    description: Optional[str] = None
+
+
+class RoleCreate(RoleBase):
+    pass
+
+
+class RoleOut(RoleBase):
+    role_id: int
+
+    class Config:
+        from_attributes = True
+
+
+# ======================
 # USER
-# ------------------------------
+# ======================
 class UserBase(BaseModel):
     full_name: str
     email: EmailStr
     phone: Optional[str] = None
     address: Optional[str] = None
-    role_name: str
-    is_deleted: Optional[bool] = False
+
 
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(..., min_length=6)
 
-class UserUpdate(BaseModel):
-    full_name: Optional[str] = None
-    phone: Optional[str] = None
-    address: Optional[str] = None
-    role_name: Optional[str] = None
-    password: Optional[str] = None
 
 class UserOut(UserBase):
     user_id: int
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    role_id: int
+    created_at: datetime
+    is_deleted: bool
 
     class Config:
         from_attributes = True
@@ -58,12 +78,16 @@ class RegisterRequest(BaseModel):
     password: str
 
 
-
-# ------------------------------
+# ======================
 # CATEGORY
-# ------------------------------
+# ======================
 class CategoryBase(BaseModel):
     category_name: str
+
+
+class CategoryCreate(CategoryBase):
+    pass
+
 
 class CategoryOut(CategoryBase):
     category_id: int
@@ -72,14 +96,19 @@ class CategoryOut(CategoryBase):
         from_attributes = True
 
 
-# ------------------------------
+# ======================
 # SUPPLIER
-# ------------------------------
+# ======================
 class SupplierBase(BaseModel):
     supplier_name: str
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
     address: Optional[str] = None
+
+
+class SupplierCreate(SupplierBase):
+    pass
+
 
 class SupplierOut(SupplierBase):
     supplier_id: int
@@ -88,183 +117,183 @@ class SupplierOut(SupplierBase):
         from_attributes = True
 
 
-# ------------------------------
+# ======================
 # PRODUCT
-# ------------------------------
+# ======================
 class ProductBase(BaseModel):
     product_name: str
     category_id: int
-    supplier_id: Optional[int] = None
+    supplier_id: Optional[int]
     price: float
     discount_percent: Optional[int] = 0
     image_url: Optional[str] = None
     description: Optional[str] = None
-    stock_quantity: Optional[int] = 0
-    is_deleted: Optional[bool] = False
-    is_hot: Optional[bool] = False
+    stock_quantity: int = Field(ge=0)
+    expiration_date: Optional[date] = None
+
+
+class ProductCreate(ProductBase):
+    pass
+
 
 class ProductOut(ProductBase):
     product_id: int
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    created_at: datetime
+    is_deleted: bool
+    is_hot: bool
 
     class Config:
         from_attributes = True
 
 
-# ------------------------------
+# ======================
 # PROMOTION
-# ------------------------------
+# ======================
 class PromotionBase(BaseModel):
     promo_code: str
     description: Optional[str] = None
     discount_type: DiscountType
     discount_value: float
-    min_order_value: Optional[float] = 0.00
-    max_uses: Optional[int] = 0
+    min_order_value: Optional[float] = None
+    max_uses: Optional[int] = None
     start_date: datetime
     end_date: datetime
     is_active: Optional[bool] = True
 
+
+class PromotionCreate(PromotionBase):
+    created_by: int
+
+
 class PromotionOut(PromotionBase):
     promo_id: int
-    created_by: Optional[int] = None
-    created_at: Optional[datetime] = None
-    uses_count: Optional[int] = 0
+    uses_count: int
+    created_at: datetime
 
     class Config:
         from_attributes = True
 
 
-# ------------------------------
-# FEEDBACK
-# ------------------------------
-class FeedbackBase(BaseModel):
-    user_id: int
-    subject: Optional[str] = None
-    message: Optional[str] = None
-    status: Optional[FeedbackStatus] = FeedbackStatus.pending
+# ======================
+# CART & CART ITEM
+# ======================
+class CartItemBase(BaseModel):
+    product_id: int
+    quantity: int = Field(gt=0)
+    price: float
 
-class FeedbackOut(FeedbackBase):
-    feedback_id: int
-    created_at: Optional[datetime] = None
+
+class CartItemCreate(CartItemBase):
+    pass
+
+
+class CartItemOut(CartItemBase):
+    cart_item_id: int
+    created_at: datetime
 
     class Config:
         from_attributes = True
 
 
-# ------------------------------
-# ORDER
-# ------------------------------
-class OrderBase(BaseModel):
-    user_id: int
+class CartBase(BaseModel):
     promo_id: Optional[int] = None
-    status: Optional[OrderStatus] = OrderStatus.pending
-    delivery_address: Optional[str] = None
-    delivery_date: Optional[datetime] = None
-    total_amount: Optional[float] = 0.00
-    is_paid: Optional[bool] = False
 
-class OrderOut(OrderBase):
-    order_id: int
-    order_date: Optional[datetime] = None
+
+class CartCreate(CartBase):
+    user_id: int
+
+
+class CartOut(CartBase):
+    cart_id: int
+    user_id: int
+    created_at: datetime
+    items: List[CartItemOut] = []
 
     class Config:
         from_attributes = True
 
 
-# ------------------------------
-# ORDER DETAIL
-# ------------------------------
+# ======================
+# ORDER & ORDER DETAIL
+# ======================
 class OrderDetailBase(BaseModel):
-    order_id: int
     product_id: int
     product_name: str
     unit_price: float
-    quantity: int
+    quantity: int = Field(gt=0)
+    subtotal: float
+
 
 class OrderDetailOut(OrderDetailBase):
     order_detail_id: int
-    subtotal: Optional[float] = None
 
     class Config:
         from_attributes = True
 
 
-# ------------------------------
+class OrderBase(BaseModel):
+    user_id: int
+    promo_id: Optional[int]
+    status: Optional[OrderStatus] = OrderStatus.pending
+    delivery_address: Optional[str]
+    total_amount: float
+    delivery_date: Optional[datetime]
+
+
+class OrderCreate(OrderBase):
+    order_details: List[OrderDetailBase]
+
+
+class OrderOut(OrderBase):
+    order_id: int
+    order_date: datetime
+    is_paid: bool
+    order_details: List[OrderDetailOut]
+
+    class Config:
+        from_attributes = True
+
+
+# ======================
+# FEEDBACK
+# ======================
+class FeedbackBase(BaseModel):
+    subject: Optional[str]
+    message: str
+
+
+class FeedbackCreate(FeedbackBase):
+    user_id: int
+
+
+class FeedbackOut(FeedbackBase):
+    feedback_id: int
+    user_id: int
+    created_at: datetime
+    status: FeedbackStatus
+
+    class Config:
+        from_attributes = True
+
+
+# ======================
 # REVIEW
-# ------------------------------
+# ======================
 class ReviewBase(BaseModel):
     product_id: int
-    user_id: int
-    rating: Optional[int] = None
+    rating: int = Field(..., ge=1, le=5)
     comment: Optional[str] = None
-    is_deleted: Optional[bool] = False
+
+
+class ReviewCreate(ReviewBase):
+    user_id: int
+
 
 class ReviewOut(ReviewBase):
     review_id: int
-    created_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-
-# ------------------------------
-# INVOICE
-# ------------------------------
-class InvoiceBase(BaseModel):
-    supplier_id: int
-
-class InvoiceOut(InvoiceBase):
-    invoice_id: int
-    created_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-
-# ------------------------------
-# INVOICE DETAIL
-# ------------------------------
-class InvoiceDetailBase(BaseModel):
-    invoice_id: int
-    product_id: int
-    product_name: str
-    quantity: int
-    unit_price: float
-
-class InvoiceDetailOut(InvoiceDetailBase):
-    invoice_detail_id: int
-    subtotal: Optional[float] = None
-
-    class Config:
-        from_attributes = True
-
-
-# ------------------------------
-# USER PROMOTION
-# ------------------------------
-class UserPromotionBase(BaseModel):
     user_id: int
-    promo_id: int
-
-class UserPromotionOut(UserPromotionBase):
-    id: int
-    used_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-
-# ------------------------------
-# PROMOTION PRODUCT
-# ------------------------------
-class PromotionProductBase(BaseModel):
-    promo_id: int
-    product_id: int
-
-class PromotionProductOut(PromotionProductBase):
-    id: int
+    created_at: datetime
+    is_deleted: bool
 
     class Config:
         from_attributes = True

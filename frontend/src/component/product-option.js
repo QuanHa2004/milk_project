@@ -14,7 +14,7 @@ function ProductCard({ product }) {
   const handleAdd = (e) => {
     e.stopPropagation();
     addToCart({
-      name: product.name,
+      name: product.product_name,
       description: product.description,
       price: product.price,
       imageUrl: product.image_url,
@@ -33,7 +33,7 @@ function ProductCard({ product }) {
       <div className="flex flex-col flex-grow justify-between p-4">
         <div>
           <p className="text-lg font-bold text-[#111618] dark:text-white line-clamp-2">
-            {product.name}
+            {product.product_name}
           </p>
           <p className="text-base font-medium text-gray-700 dark:text-gray-300">
             ${product.price}
@@ -104,7 +104,7 @@ export default function ProductOption() {
               onClick={() => clickCategory(cat.category_id)}
               className="text-white text-base font-bold px-3 py-1 text-center hover:opacity-90"
             >
-              {cat.name}
+              {cat.category_name}
             </button>
           ))}
         </nav>

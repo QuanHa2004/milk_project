@@ -76,7 +76,7 @@ def register(request: schema.RegisterRequest, db: Session = Depends(get_db)):
         full_name=request.full_name,
         email=request.email,
         password_hash=hash_password(request.password),
-        role_name="customer",
+        role_id=2,
         phone=request.phone,
         address=request.address
     )
@@ -97,14 +97,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     # Tạo token
     access_token = create_access_token(
-        data={"sub": user.email, "role": user.role_name},
+        data={"sub": user.email, "role": user.role_id},
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
 
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "role": user.role_name,
+        "role": user.role_id,
         "email": user.email,
     }
 
@@ -128,58 +128,58 @@ def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get
 
 
 
-# @app.get("/products", response_model=list[schema.ProductOut])
-# def get_products(db: Session = Depends(get_db)):
-#     return db.query(models.Product).all()
+@app.get("/products", response_model=list[schema.ProductOut])
+def get_products(db: Session = Depends(get_db)):
+    return db.query(models.Product).all()
 
 
-# @app.get("/product/{product_id}")
-# def get_product_detail(product_id: int, db: Session = Depends(get_db)):
-#     product = (
-#         db.query(models.Product).filter(models.Product.product_id == product_id).first()
-#     )
-#     if not product:
-#         raise HTTPException(status_code=404, detail="Product not exist")
-#     return {
-#         "product_id": product.product_id,
-#         "name": product.name,
-#         "description": product.description,
-#         "price": product.price,
-#         "quantity": product.quantity,
-#         "image_url": product.image_url,
-#     }
+@app.get("/product/{product_id}")
+def get_product_detail(product_id: int, db: Session = Depends(get_db)):
+    product = (
+        db.query(models.Product).filter(models.Product.product_id == product_id).first()
+    )
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not exist")
+    return {
+        "product_id": product.product_id,
+        "name": product.product_name,
+        "description": product.description,
+        "price": product.price,
+        "quantity": product.stock_quantity,
+        "image_url": product.image_url,
+    }
 
 
-# @app.get("/categories", response_model=list[schema.CategoryOut])
-# def get_categories(db: Session = Depends(get_db)):
-#     categories = db.query(models.Category).all()
-#     return categories
+@app.get("/categories", response_model=list[schema.CategoryOut])
+def get_categories(db: Session = Depends(get_db)):
+    categories = db.query(models.Category).all()
+    return categories
 
 
-# @app.get("/products/{category_id}", response_model=list[schema.ProductOut])
-# def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
-#     category = (
-#         db.query(models.Category)
-#         .filter(models.Category.category_id == category_id)
-#         .first()
-#     )
-#     if not category:
-#         raise HTTPException(status_code=404, detail="Category not found")
+@app.get("/products/{category_id}", response_model=list[schema.ProductOut])
+def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
+    category = (
+        db.query(models.Category)
+        .filter(models.Category.category_id == category_id)
+        .first()
+    )
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
 
-#     products = (
-#         db.query(models.Product).filter(models.Product.category_id == category_id).all()
-#     )
-#     return products
+    products = (
+        db.query(models.Product).filter(models.Product.category_id == category_id).all()
+    )
+    return products
 
 
-# @app.get("/products/search/{search_name}", response_model=list[schema.ProductOut])
-# def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
-#     products = (
-#         db.query(models.Product)
-#         .filter(models.Product.name.ilike(f"%{search_name}%"))
-#         .all()
-#     )
-#     if not products:
-#         raise HTTPException(status_code=404, detail="Products not found")
+@app.get("/products/search/{search_name}", response_model=list[schema.ProductOut])
+def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
+    products = (
+        db.query(models.Product)
+        .filter(models.Product.product_name.ilike(f"%{search_name}%"))
+        .all()
+    )
+    if not products:
+        raise HTTPException(status_code=404, detail="Products not found")
 
-#     return products
+    return products
