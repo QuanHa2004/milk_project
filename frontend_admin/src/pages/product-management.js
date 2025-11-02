@@ -1,4 +1,4 @@
-import SideBar from "../../component/side-bar";
+import SideBar from "../component/side-bar";
 import { useNavigate } from "react-router-dom";
 export default function ProductManagement() {
   const navigate = useNavigate();

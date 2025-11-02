@@ -49,7 +49,7 @@ export default function Login() {
       window.dispatchEvent(new Event("storage"));
 
       if (data.role_id === 1) {
-        navigate("/admin/dashboard");
+        window.location.href = "http://localhost:3001/admin/dashboard";
       } else {
         navigate("/home");
       }

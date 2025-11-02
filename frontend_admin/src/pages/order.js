@@ -1,5 +1,5 @@
 import React from "react";
-import SideBar from "../../component/side-bar";
+import SideBar from "../component/side-bar";
 
 export default function OrderManagement() {
   return (
