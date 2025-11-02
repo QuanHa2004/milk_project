@@ -86,7 +86,6 @@ class Promotion(Base):
     creator = relationship("User", back_populates="promotions")
     carts = relationship("Cart", back_populates="promotion")
     orders = relationship("Order", back_populates="promotion")
-    promotion_products = relationship("PromotionProduct", back_populates="promotion")
 
 
 class Category(Base):
@@ -235,17 +234,6 @@ class OrderDetail(Base):
 
     order = relationship("Order", back_populates="order_details")
     product = relationship("Product", back_populates="order_details")
-
-
-class PromotionProduct(Base):
-    __tablename__ = "promotion_products"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    promo_id = Column(Integer, ForeignKey("promotions.promo_id"), nullable=False)
-    product_id = Column(Integer, ForeignKey("products.product_id"), nullable=False)
-
-    promotion = relationship("Promotion", back_populates="promotion_products")
-    product = relationship("Product")
 
 
 class Review(Base):

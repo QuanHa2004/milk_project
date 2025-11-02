@@ -11,14 +11,21 @@ function ProductCard({ product }) {
     navigate(`/product-detail/${product.product_id}`);
   };
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.stopPropagation();
-    addToCart({
-      name: product.product_name,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.image_url,
-    });
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await addToCart(product.product_id, 1);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -63,7 +70,7 @@ export default function ProductOption() {
     fetch("http://localhost:8000/categories")
       .then((res) => res.json())
       .then((data) => setCategories(data))
-      .catch((err) => console.error("Failed to fetch categories", err));
+      .catch((err) => console.error("Không có danh mục", err));
   }, []);
 
   useEffect(() => {
@@ -77,7 +84,7 @@ export default function ProductOption() {
       fetch(url)
         .then((res) => res.json())
         .then((data) => setProducts(data))
-        .catch((err) => console.error("Failed to fetch products:", err));
+        .catch((err) => console.error("Không có sản phẩm", err));
     }
   }, [category_id, searchResult]);
 

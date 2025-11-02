@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import Header from '../../component/header';
@@ -9,7 +9,7 @@ export default function ProductDetail() {
     const { product_id } = useParams();
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
-
+    const navigate = useNavigate();
     const { addToCart } = useCart();
 
     useEffect(() => {
@@ -20,15 +20,21 @@ export default function ProductDetail() {
             });
     }, [product_id]);
 
-    const handleAdd = (e) => {
+    const handleAdd = async (e) => {
         e.stopPropagation();
-        addToCart({
-            name: product.name,
-            description: product.description,
-            price: product.price,
-            imageUrl: product.image_url,
-            quantity: quantity,
-        });
+
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+            alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+            navigate("/login");
+            return;
+        }
+
+        try {
+            await addToCart(product.product_id, quantity);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const increase = () => setQuantity((prev) => prev + 1);

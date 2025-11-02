@@ -11,15 +11,23 @@ function ProductCard({ product }) {
     if (product.link) navigate(product.link);
   };
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.stopPropagation();
-    addToCart({
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.image_url,
-    });
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await addToCart(product.product_id, 1);
+    } catch (err) {
+      console.error(err);
+    }
   };
+
 
   return (
     <div onClick={handleClick} className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-shadow">

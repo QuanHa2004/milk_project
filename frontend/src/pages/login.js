@@ -44,9 +44,10 @@ export default function Login() {
       const data = await response.json();
 
       localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("role", data.role_id);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      localStorage.setItem("role_id", data.role_id);
+      window.dispatchEvent(new Event("storage"));
 
-      alert("Đăng nhập thành công!");
       if (data.role_id === 1) {
         navigate("/admin/dashboard");
       } else {

@@ -24,7 +24,7 @@ export default function Registration() {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match!");
+      setMessage("Mật khẩu xác nhận không giống!");
       return;
     }
 
@@ -38,16 +38,15 @@ export default function Registration() {
           phone: formData.phone,
           address: formData.address,
           password: formData.password,
-          role_name: "customer",
         }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.detail || "Registration failed");
+        throw new Error(data.detail || "Đăng ký thất bại");
       }
 
-      setMessage("Registration successful!");
+      setMessage(data.message);
       setFormData({
         full_name: "",
         email: "",
@@ -100,7 +99,6 @@ export default function Registration() {
                       <input
                         name={field.name}
                         type={field.type}
-                        maxLength={72}
                         value={formData[field.name]}
                         onChange={handleChange}
                         placeholder={field.placeholder}

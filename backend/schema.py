@@ -183,9 +183,13 @@ class CartItemBase(BaseModel):
     price: float
 
 
-class CartItemCreate(CartItemBase):
-    pass
+class CartItemCreate(BaseModel):
+    product_id: int
+    quantity: int = Field(gt=0)
 
+class CartItemUpdate(BaseModel):
+    product_id: int
+    quantity: int = Field(gt=0)
 
 class CartItemOut(CartItemBase):
     cart_item_id: int
