@@ -19,7 +19,7 @@ function CategoryCard({ cat }) {
       <div className="p-4 flex flex-col items-center">
         <h3 className="text-xl font-bold text-[#111618] mb-2 text-center">{cat.title}</h3>
         <button className="px-4 py-2 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors">
-          SHOP NOW
+          MUA NGAY
         </button>
       </div>
     </div>
@@ -29,19 +29,19 @@ function CategoryCard({ cat }) {
 export default function Explore() {
   const categories = [
     {
-      title: "DIARY",
+      title: "SỮA TƯƠI",
       imageUrl: "https://th.bing.com/th/id/OSK.HEROYeXAVJkpUhbzwfZSLTVavNxcuAiBlYC11vqRLgZ8NqQ?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
       link: "/products/category/1",
     },
     {
-      title: "CHEESE",
+      title: "SỮA HẠT",
       imageUrl: "https://images.pexels.com/photos/821365/pexels-photo-821365.jpeg",
-      link: "/products/category/2",
+      link: "/products/category/5",
     },
     {
-      title: "YOGURT",
+      title: "PHÔ MAI",
       imageUrl: "https://images.pexels.com/photos/5945660/pexels-photo-5945660.jpeg",
-      link: "/products/category/3",
+      link: "/products/category/6",
     },
   ];
 

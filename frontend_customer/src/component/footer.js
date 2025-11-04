@@ -5,24 +5,24 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-white text-lg font-bold mb-2">FreshMilk</h3>
-            <p className="text-white text-sm">Your daily dose of freshness, delivered.</p>
+            <p className="text-white text-sm">Giao hàng cấp tốc.</p>
           </div>
           <div>
-            <h3 className="text-white text-lg font-bold mb-2">Quick Links</h3>
+            <h3 className="text-white text-lg font-bold mb-2">Thông báo</h3>
             <ul>
               <li>
                 <span className="text-sm text-white hover:text-primary" href="/terms">
-                  Terms of Service
+                  Điều khoản
                 </span>
               </li>
               <li>
                 <span className="text-sm text-white hover:text-primary" href="/privacy">
-                  Privacy Policy
+                  Chính sách
                 </span>
               </li>
               <li>
                 <span className="text-sm text-white hover:text-primary" href="/contact">
-                  Contact Us
+                  Liên lạc với chúng tôi
                 </span>
               </li>
             </ul>
@@ -30,7 +30,7 @@ export default function Footer() {
 
           {/* Social Media */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-2">Follow Us</h3>
+            <h3 className="text-white text-lg font-bold mb-2">Theo dõi chúng tôi</h3>
             <div className="flex space-x-4">
               {/* Add icons or links here if needed */}
             </div>
@@ -39,7 +39,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-white">
-          <p>© 2024 FreshMilk. All rights reserved.</p>
+          <p>© 2024 FreshMilk. Mọi quyền được bảo lưu.</p>
         </div>
       </div>
     </footer>

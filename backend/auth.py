@@ -86,8 +86,8 @@ def get_current_user(
 # ====================================================
 
 
-@router.post("/register")
-def register(request: schema.RegisterRequest, db: Session = Depends(get_db)):
+@router.post("/register", response_model=schema.UserResponse)
+def register(request: schema.UserCreate, db: Session = Depends(get_db)):
     if not request.password:
         raise HTTPException(status_code=400, detail="Mật khẩu không được để trống")
 
@@ -101,14 +101,16 @@ def register(request: schema.RegisterRequest, db: Session = Depends(get_db)):
         full_name=request.full_name,
         email=request.email,
         password_hash=hash_password(request.password),
-        role_id=2,
+        role_id=request.role_id if request.role_id else 2,  # mặc định user thường
         phone=request.phone,
         address=request.address,
     )
+
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return {"message": "Đăng ký thành công", "email": new_user.email}
+
+    return new_user
 
 
 @router.post("/login")
@@ -158,7 +160,7 @@ def refresh_token(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Refresh token không hợp lệ")
 
 
-@router.get("/me", response_model=schema.UserOut)
+@router.get("/me", response_model=schema.UserResponse)
 def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
     try:

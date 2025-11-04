@@ -69,27 +69,27 @@ export default function Registration() {
               water_drop
             </span>
             <h2 className="text-3xl font-bold text-text-light dark:text-text-dark">
-              MooMilk
+              FreshMilk
             </h2>
           </div>
 
           <div className="w-full bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div className="flex flex-col items-center">
               <h1 className="text-text-light dark:text-text-dark text-2xl sm:text-3xl font-bold pb-4 text-center">
-                Create Your Account
+                Tạo tài khoản
               </h1>
               <p className="text-center text-gray-500 dark:text-gray-400 mb-8">
-                Join us and get fresh milk delivered to your door.
+                Tham gia cùng chúng tôi
               </p>
 
               <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
                 {[
-                  { name: "full_name", label: "Full Name", type: "text", placeholder: "Enter your full name" },
-                  { name: "email", label: "Email Address", type: "email", placeholder: "Enter your email address" },
-                  { name: "phone", label: "Phone", type: "tel", placeholder: "Enter your phone number" },
-                  { name: "address", label: "Address", type: "text", placeholder: "Enter your delivery address" },
-                  { name: "password", label: "Password", type: "password", placeholder: "Enter your password" },
-                  { name: "confirmPassword", label: "Confirm Password", type: "password", placeholder: "Confirm your password" },
+                  { name: "full_name", label: "Tên của bạn:", type: "text", placeholder: "Nhập tên đầy đủ của bạn" },
+                  { name: "email", label: "Email", type: "email", placeholder: "Nhập email của bạn" },
+                  { name: "phone", label: "SĐT", type: "tel", placeholder: "Nhập số điện thoại của bạn" },
+                  { name: "address", label: "Địa chỉ", type: "text", placeholder: "Nhập địa chỉ nhà của bạn" },
+                  { name: "password", label: "Mật khẩu", type: "password", placeholder: "Nhập mật khẩu của bạn" },
+                  { name: "confirmPassword", label: "Xác nhận mật khẩu", type: "password", placeholder: "Nhập lại mật khẩu" },
                 ].map((field) => (
                   <div key={field.name} className="flex flex-col w-full">
                     <label className="flex flex-col w-full">
@@ -113,7 +113,7 @@ export default function Registration() {
                   type="submit"
                   className="mt-4 flex items-center justify-center h-12 rounded-lg w-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
                 >
-                  Register
+                  Đăng ký
                 </button>
               </form>
 
@@ -125,9 +125,9 @@ export default function Registration() {
 
               <div className="pt-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Already have an account?{" "}
+                  Bạn đã có tài khoản?{" "}
                   <span onClick={()=>navigate('/')} className="font-medium text-primary hover:underline">
-                    Log in
+                    Đăng nhập
                   </span>
                 </p>
               </div>

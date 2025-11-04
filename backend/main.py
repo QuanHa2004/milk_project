@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
+from sqlalchemy import func 
+from sqlalchemy.orm import Session, joinedload
 import models
 from database import engine, get_db
 import schema
 from auth import router
+from admin import admin
 from customer import customer
 
 app = FastAPI()
@@ -20,12 +22,15 @@ app.add_middleware(
 )
 
 app.include_router(router)
+app.include_router(admin)
 app.include_router(customer)
 
 
-@app.get("/products", response_model=list[schema.ProductOut])
+@app.get("/products", response_model=list[schema.ProductResponse])
 def get_products(db: Session = Depends(get_db)):
-    return db.query(models.Product).all()
+    return (
+        db.query(models.Product).all()
+    )
 
 
 @app.get("/product/{product_id}")
@@ -45,13 +50,11 @@ def get_product_detail(product_id: int, db: Session = Depends(get_db)):
     }
 
 
-@app.get("/categories", response_model=list[schema.CategoryOut])
+@app.get("/categories", response_model=list[schema.CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):
-    categories = db.query(models.Category).all()
-    return categories
+    return db.query(models.Category).all()
 
-
-@app.get("/products/{category_id}", response_model=list[schema.ProductOut])
+@app.get("/products/{category_id}", response_model=list[schema.ProductResponse])
 def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
     category = (
         db.query(models.Category)
@@ -67,7 +70,7 @@ def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
     return products
 
 
-@app.get("/products/search/{search_name}", response_model=list[schema.ProductOut])
+@app.get("/products/search/{search_name}", response_model=list[schema.ProductResponse])
 def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
     products = (
         db.query(models.Product)

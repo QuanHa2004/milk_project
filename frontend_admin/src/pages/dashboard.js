@@ -10,21 +10,18 @@ export default function Dashboard() {
         <div className="flex flex-col gap-8">
           <div className="flex min-w-72 flex-col gap-1">
             <p className="text-text-light-primary dark:text-text-dark-primary text-4xl font-black leading-tight tracking-[-0.033em]">
-              Admin Dashboard
-            </p>
-            <p className="text-text-light-secondary dark:text-text-dark-secondary text-base font-normal leading-normal">
-              A quick overview of your business performance.
+              Bảng điều khiển
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: "Total Sales", value: "$15,230", change: "+5.2%" },
-              { title: "Total Orders", value: "345", change: "+1.8%" },
-              { title: "New Customers", value: "28", change: "+12%" },
+              { title: "Tổng doanh thu", value: "15.230 VND"},
+              { title: "Tổng đơn hàng", value: "345"},
+              { title: "Khách hàng mới", value: "28"},
               {
-                title: "Avg. Order Value",
-                value: "$44.14",
+                title: "Giá trị trung bình",
+                value: "44.140 VND",
                 change: "-0.5%",
                 changeClass: "text-red-500",
               },
@@ -39,63 +36,40 @@ export default function Dashboard() {
                 <p className="text-text-light-primary dark:text-text-dark-primary tracking-light text-3xl font-bold">
                   {stat.value}
                 </p>
-                <p
-                  className={`text-base font-medium ${
-                    stat.changeClass || "text-secondary"
-                  }`}
-                >
-                  {stat.change}
-                </p>
               </div>
             ))}
           </div>
 
-          {/* Recent Promotions */}
           <div className="rounded-xl border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark">
             <h2 className="text-text-light-primary dark:text-text-dark-primary text-xl font-bold p-6">
-              Recent Promotions
+              Mã tạo gần đây
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="border-b border-border-light dark:border-border-dark">
                   <tr>
                     <th className="px-6 py-3 text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary">
-                      Campaign Name
+                      Mã giảm giá
                     </th>
                     <th className="px-6 py-3 text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary">
-                      Start Date
+                      Ngày bắt đầu
                     </th>
                     <th className="px-6 py-3 text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary">
-                      End Date
+                      Ngày kết thúc
                     </th>
                     <th className="px-6 py-3 text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary">
-                      Status
+                      Trạng thái
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {[
                     {
-                      name: "Summer Freshness Sale",
+                      name: "MK104",
                       start: "June 1, 2024",
                       end: "June 30, 2024",
                       status: "Active",
                       color: "bg-secondary/20 text-secondary",
-                    },
-                    {
-                      name: "Back to School Special",
-                      start: "August 15, 2024",
-                      end: "September 5, 2024",
-                      status: "Upcoming",
-                      color:
-                        "bg-gray-500/20 text-text-light-secondary dark:text-text-dark-secondary",
-                    },
-                    {
-                      name: "Spring Fling Discount",
-                      start: "April 10, 2024",
-                      end: "April 24, 2024",
-                      status: "Expired",
-                      color: "bg-red-500/20 text-red-500",
                     },
                   ].map((promo) => (
                     <tr

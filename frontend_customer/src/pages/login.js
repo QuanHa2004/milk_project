@@ -87,10 +87,10 @@ export default function Login() {
             ></path>
           </svg>
           <p className="text-3xl font-black text-slate-800 dark:text-white">
-            Welcome Back!
+            Chào mừng!
           </p>
           <p className="text-base text-slate-600 dark:text-slate-300">
-            Log in to your Milkify Account
+            Tạo tài khoản cho riêng bạn
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export default function Login() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter your email"
+                placeholder="Nhập email"
                 className="form-input flex h-12 w-full border border-slate-300 dark:border-slate-600 bg-white/70 dark:bg-slate-800/50 p-3 text-base text-slate-800 dark:text-white placeholder:text-slate-500 focus:border-primary focus:ring-2 focus:ring-primary/40 rounded-l-lg"
                 required
               />
@@ -128,7 +128,7 @@ export default function Login() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
+                placeholder="Nhập mật khẩu"
                 className="form-input flex h-12 w-full border border-slate-300 dark:border-slate-600 bg-white/70 dark:bg-slate-800/50 p-3 text-base text-slate-800 dark:text-white placeholder:text-slate-500 focus:border-primary focus:ring-2 focus:ring-primary/40 rounded-l-lg"
                 required
               />
@@ -147,7 +147,7 @@ export default function Login() {
           <span
             className="text-sm font-medium text-primary hover:underline text-right mt-1"
           >
-            Forgot Password?
+            Quên mật khẩu?
           </span>
 
           <button
@@ -155,15 +155,15 @@ export default function Login() {
             disabled={loading}
             className="flex h-12 w-full items-center justify-center rounded-lg bg-primary text-base font-bold text-white shadow-md transition-all hover:bg-primary/90 focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 mt-4"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>
 
         <div className="mt-8 text-center">
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            Don’t have an account?{" "}
+            Chưa có tài khoản?{" "}
             <span onClick={() => navigate('/registation')} className="font-bold text-primary hover:underline">
-              Sign Up
+              Đăng ký
             </span>
           </p>
         </div>

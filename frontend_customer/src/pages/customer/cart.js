@@ -19,16 +19,16 @@ export default function Cart() {
                             <div class="flex flex-wrap justify-between gap-3 p-4">
                                 <p
                                     class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">
-                                    Your Shopping Cart</p>
+                                    Giỏ hàng của bạn</p>
                             </div>
                             <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-12">
                                 <div class="lg:col-span-2 space-y-6">
                                     <div
                                         class="hidden md:grid grid-cols-6 gap-4 px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                        <div class="col-span-3">Product</div>
-                                        <div class="text-center">Price</div>
-                                        <div class="text-center">Quantity</div>
-                                        <div class="text-right">Total</div>
+                                        <div class="col-span-3">Sản phẩm</div>
+                                        <div class="text-center">Giá</div>
+                                        <div class="text-center">Số lượng</div>
+                                        <div class="text-right">Tổng cộng</div>
                                     </div>
                                     <CartItem/>
 
@@ -36,7 +36,7 @@ export default function Cart() {
                                         <div>
                                             <button
                                                 class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent text-primary text-sm font-bold leading-normal tracking-[0.015em] border-2 border-primary hover:bg-primary/10" onClick={()=>navigate('/products')}>
-                                                <span class="truncate">Continue Shopping</span>
+                                                <span class="truncate">Tiếp tục mua hàng</span>
                                             </button>
                                         </div>
                                     </div>
@@ -45,12 +45,12 @@ export default function Cart() {
                                     <div class="bg-white dark:bg-background-dark p-6 rounded-lg shadow-sm sticky top-10">
                                         <h3
                                             class="text-xl font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-4">
-                                            Order Summary</h3>
+                                            Tóm tắt đơn hàng</h3>
                                         <CartSummary/>
                                         <div>
                                             <button
                                                 class="mt-6 w-full flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90" onClick={() => navigate('/checkout')}>
-                                                <span class="truncate">Proceed to Checkout</span>
+                                                <span class="truncate">Tiến hành thanh toán</span>
                                             </button>
                                         </div>
                                     </div>

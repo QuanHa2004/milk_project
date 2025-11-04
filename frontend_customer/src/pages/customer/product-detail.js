@@ -64,7 +64,7 @@ export default function ProductDetail() {
                                     </p>
                                     <h2
                                         class="text-[#333333] dark:text-white tracking-light text-[28px] font-bold leading-tight pt-2">
-                                        ${product.price}</h2>
+                                        {product.price.toLocaleString('vi-VN')} VND</h2>
                                     <div class="flex items-center gap-4 mt-6">
                                         <label class="text-[#333333] dark:text-gray-300" for="quantity">Quantity:</label>
                                         <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg">
@@ -94,7 +94,7 @@ export default function ProductDetail() {
                                     </button>
                                 </div>
                             </div>
-                            <div class="mt-12">
+                            {/* <div class="mt-12">
                                 <h3
                                     class="text-[#333333] dark:text-white text-xl font-bold border-b-2 border-gray-200 dark:border-gray-700 pb-2 mb-4">
                                     Product Details</h3>
@@ -139,7 +139,7 @@ export default function ProductDetail() {
                                         </table>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

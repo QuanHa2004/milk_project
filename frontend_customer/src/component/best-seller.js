@@ -6,7 +6,6 @@ import useCart from '../context/cart-context';
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  console.log(product.product_id);
   const handleClick = () => {
     if (product.link) navigate(product.link);
   };
@@ -39,10 +38,10 @@ function ProductCard({ product }) {
         <h3 className="text-text-color text-xl font-bold">{product.name}</h3>
         <p className="text-gray-500 mt-1 flex-1">{product.description}</p>
         <div className="flex justify-between items-center mt-4">
-          <span className="text-xl font-bold text-secondary">${product.price}</span>
+          <span className="text-xl font-bold text-secondary">{product.price.toLocaleString('vi-VN')} VND</span>
           <button onClick={handleAdd} className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-opacity flex items-center gap-2">
             <span className="material-symbols-outlined text-base">add_shopping_cart</span>
-            Add
+            Thêm
           </button>
         </div>
       </div>

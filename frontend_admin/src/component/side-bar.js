@@ -4,11 +4,11 @@ export default function SideBar() {
   const navigate = useNavigate();
 
   const navItems = [
-    { icon: "dashboard", text: "Dashboard", url: "/admin/dashboard" },
-    { icon: "shopping_cart", text: "Orders", url: "/admin/order" },
-    { icon: "inventory_2", text: "Products", url: "/admin/product" },
-    { icon: "campaign", text: "Promotions", url: "/admin/promotion" },
-    { icon: "category", text: "Categories", url: "/admin/category" },
+    { icon: "dashboard", text: "Bảng điều khiển", url: "/admin/dashboard" },
+    { icon: "shopping_cart", text: "Đơn hàng", url: "/admin/order" },
+    { icon: "inventory_2", text: "Sản phẩm", url: "/admin/product" },
+    { icon: "campaign", text: "Mã giảm giá", url: "/admin/promotion" },
+    { icon: "category", text: "Danh mục", url: "/admin/category" },
   ];
 
   return (
@@ -67,7 +67,7 @@ export default function SideBar() {
                   Jane Doe
                 </h1>
                 <span className="text-primary text-xs font-normal hover:underline">
-                  Logout
+                  Đăng xuất
                 </span>
               </div>
             </div>

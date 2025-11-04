@@ -17,7 +17,7 @@ export default function CartSummary() {
     <div className="space-y-4 mt-4">
       <div className="border-b border-gray-200 dark:border-gray-700 pb-2">
         {cartItems.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400">No products yet</p>
+          <p className="text-gray-500 dark:text-gray-400">Chưa có sản phẩm nào!</p>
         ) : (
           <ul className="space-y-1 text-gray-700 dark:text-gray-300">
             {cartItems.map((item) => (
@@ -25,11 +25,11 @@ export default function CartSummary() {
                 <div className="flex flex-col">
                   <span className="font-medium">{item.name}</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Quantity: {item.quantity}
+                    Số lượng: {item.quantity}
                   </span>
                 </div>
                 <span className="font-medium">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  {(item.price * item.quantity).toLocaleString('vi-VN')} VND
                 </span>
               </li>
             ))}
@@ -38,20 +38,20 @@ export default function CartSummary() {
       </div>
 
       <div className="flex justify-between text-gray-600 dark:text-gray-300">
-        <span>Subtotal</span>
-        <span>${subtotal.toFixed(2)}</span>
+        <span>Tổng tiền ước tính</span>
+        <span>{subtotal.toLocaleString('vi-VN')} VND</span>
       </div>
 
       <div className="flex justify-between text-gray-600 dark:text-gray-300">
-        <span>Taxes (estimated)</span>
-        <span>${taxes.toFixed(2)}</span>
+        <span>Thuế</span>
+        <span>{taxes.toLocaleString('vi-VN')} VND</span>
       </div>
 
       <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
 
       <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
-        <span>Total</span>
-        <span>${total.toFixed(2)}</span>
+        <span>Tổng cộng</span>
+        <span>{total.toLocaleString('vi-VN')} VND</span>
       </div>
     </div>
   );

@@ -1,76 +1,47 @@
 import SideBar from "../component/side-bar";
 import { useNavigate } from "react-router-dom";
+
+import ProductList from "../component/product-list";
 export default function ProductManagement() {
   const navigate = useNavigate();
 
   return (
     <div className="relative flex min-h-screen">
-
-      <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-        <div className="flex flex-1">
-          {/* === SideNavBar === */}
+      <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div className="flex flex-row min-h-screen">
           <SideBar />
-
-          {/* === Main Content === */}
-          <main className="flex-1 p-6 lg:p-10">
-            <div className="max-w-7xl mx-auto">
-              {/* Page Heading */}
+          <main className="flex-1 p-8">
+            <div className="w-full max-w-7xl mx-auto">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <div className="flex min-w-72 flex-col gap-1">
                   <p className="text-gray-900 dark:text-white text-3xl font-black">
-                    Product Management
-                  </p>
-                  <p className="text-gray-500 dark:text-gray-400 text-base">
-                    View, add, and manage all products.
+                    Quản lý sản phẩm
                   </p>
                 </div>
                 <button onClick={() => navigate('/admin/add-product')} className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
                   <span className="material-symbols-outlined text-base">add</span>
-                  <span >Add New Product</span>
+                  <span >Thêm sản phẩm</span>
                 </button>
               </div>
 
-              {/* Table */}
-              <div className="w-full overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-900/50">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-2/12">Product Name</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-2/12">Category</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-2/12">Supplier</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-1/12">Price</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-1/12">Quantity</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-2/12">Expiration Date</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-                      {[
-                        {
-                          name: "Almond Milk",
-                          category: "Plant-Based",
-                          supplier: "Nutty Co.",
-                          price: "$6.25",
-                          qty: "120 units",
-                          exp: "2025-01-10",
-                        },
-                      ].map((item, i) => (
-                        <tr
-                          key={i}
-                          className="hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors"
-                        >
-                          <td className="px-4 py-2 font-medium">{item.name}</td>
-                          <td className="px-4 py-2">{item.category}</td>
-                          <td className="px-4 py-2">{item.supplier}</td>
-                          <td className="px-4 py-2">{item.price}</td>
-                          <td className="px-4 py-2">{item.qty}</td>
-                          <td className="px-4 py-2">{item.exp}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+              <div className="mb-6">
+                <label className="flex flex-col min-w-40 h-12 w-full max-w-lg">
+                  <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-white dark:bg-background-dark border border-[#E0E0E0] dark:border-gray-700">
+                    <div className="text-[#617c89] flex items-center justify-center pl-4">
+                      <span className="material-symbols-outlined">search</span>
+                    </div>
+                    <input
+                      className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-[#617c89] px-2 text-base font-normal leading-normal"
+                      placeholder="Tìm sản phẩm"
+                      value=""
+                      readOnly
+                    />
+                  </div>
+                </label>
               </div>
+
+              <ProductList/>
+              
             </div>
           </main>
         </div>

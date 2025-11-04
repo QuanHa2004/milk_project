@@ -5,7 +5,7 @@ import ProductManagement from '../pages/product-management';
 import PromotionManagement from '../pages/promotion-management';
 import AddProduct from '../pages/add-product';
 import CreatePromotion from '../pages/create-promotion';
-import Order from '../pages/order';
+import Order from '../pages/order-management';
 
 export default function AppRoutes() {
   return (

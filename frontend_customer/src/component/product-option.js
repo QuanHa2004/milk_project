@@ -43,7 +43,7 @@ function ProductCard({ product }) {
             {product.product_name}
           </p>
           <p className="text-base font-medium text-gray-700 dark:text-gray-300">
-            ${product.price}
+            {product.price.toLocaleString('vi-VN')} VND
           </p>
         </div>
         <button
@@ -51,7 +51,7 @@ function ProductCard({ product }) {
           className="mt-4 w-full flex items-center justify-center rounded-lg h-10 bg-primary text-white text-sm font-bold tracking-wide transition-colors duration-300 hover:bg-primary/90 group-hover:bg-primary"
         >
           <span className="material-symbols-outlined mr-2">add_shopping_cart</span>
-          Add to Cart
+          Thêm vào giỏ hàng
         </button>
       </div>
     </div>
@@ -103,7 +103,7 @@ export default function ProductOption() {
             onClick={() => navigate("/products")}
             className="text-white text-base font-bold px-3 py-1 text-center hover:opacity-90"
           >
-            All
+            Tất cả
           </button>
           {categories.map((cat) => (
             <button

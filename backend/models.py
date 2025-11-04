@@ -1,39 +1,16 @@
-from sqlalchemy import (
-    Column, Integer, String, ForeignKey, DateTime, Text,
-    DECIMAL, Enum, Boolean, Date
-)
-from sqlalchemy.orm import relationship
-from database import Base
 from datetime import datetime
-import enum
+from sqlalchemy import (
+    Column, Integer, String, Text, DateTime, DECIMAL, Enum,
+    ForeignKey, Boolean, Date, UniqueConstraint
+)
+from sqlalchemy.orm import relationship, declarative_base
+
+Base = declarative_base()
 
 
-# ======================
-# ENUM DEFINITIONS
-# ======================
-
-class DiscountType(enum.Enum):
-    percent = "percent"
-    fixed = "fixed"
-
-
-class FeedbackStatus(enum.Enum):
-    pending = "pending"
-    in_progress = "in_progress"
-    resolved = "resolved"
-
-
-class OrderStatus(enum.Enum):
-    pending = "pending"
-    confirmed = "confirmed"
-    delivered = "delivered"
-    cancelled = "cancelled"
-
-
-# ======================
-# TABLE DEFINITIONS
-# ======================
-
+# ==============================
+# 1️⃣ Roles
+# ==============================
 class Role(Base):
     __tablename__ = "roles"
 
@@ -44,6 +21,9 @@ class Role(Base):
     users = relationship("User", back_populates="role")
 
 
+# ==============================
+# 2️⃣ Users
+# ==============================
 class User(Base):
     __tablename__ = "users"
 
@@ -53,26 +33,30 @@ class User(Base):
     phone = Column(String(20))
     address = Column(String(255))
     password_hash = Column(String(255), nullable=False)
-    role_id = Column(Integer, ForeignKey("roles.role_id"), nullable=False)
+    role_id = Column(Integer, ForeignKey("roles.role_id", ondelete="RESTRICT"), nullable=False)
     is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime)
 
     role = relationship("Role", back_populates="users")
-    promotions = relationship("Promotion", back_populates="creator")
     carts = relationship("Cart", back_populates="user")
     feedbacks = relationship("Feedback", back_populates="user")
-    orders = relationship("Order", back_populates="user")
     reviews = relationship("Review", back_populates="user")
+    orders = relationship("Order", back_populates="user")
+    promotions_created = relationship("Promotion", back_populates="creator")
+    user_promotions = relationship("UserPromotion", back_populates="user")
 
 
+# ==============================
+# 3️⃣ Promotions
+# ==============================
 class Promotion(Base):
     __tablename__ = "promotions"
 
     promo_id = Column(Integer, primary_key=True, autoincrement=True)
     promo_code = Column(String(50), unique=True, nullable=False)
     description = Column(String(255))
-    discount_type = Column(Enum(DiscountType))
+    discount_type = Column(Enum("percent", "fixed"))
     discount_value = Column(DECIMAL(10, 2), nullable=False)
     min_order_value = Column(DECIMAL(12, 2))
     max_uses = Column(Integer)
@@ -80,68 +64,24 @@ class Promotion(Base):
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)
     is_active = Column(Boolean, default=True)
-    created_by = Column(Integer, ForeignKey("users.user_id"))
+    created_by = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"))
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    creator = relationship("User", back_populates="promotions")
+    creator = relationship("User", back_populates="promotions_created")
     carts = relationship("Cart", back_populates="promotion")
     orders = relationship("Order", back_populates="promotion")
+    user_promotions = relationship("UserPromotion", back_populates="promotion")
 
 
-class Category(Base):
-    __tablename__ = "categories"
-
-    category_id = Column(Integer, primary_key=True, autoincrement=True)
-    category_name = Column(String(100), nullable=False)
-
-    products = relationship("Product", back_populates="category")
-
-
-class Supplier(Base):
-    __tablename__ = "suppliers"
-
-    supplier_id = Column(Integer, primary_key=True, autoincrement=True)
-    supplier_name = Column(String(100), nullable=False)
-    email = Column(String(150))
-    phone = Column(String(20))
-    address = Column(String(255))
-
-    products = relationship("Product", back_populates="supplier")
-    invoices = relationship("Invoice", back_populates="supplier")
-
-
-class Product(Base):
-    __tablename__ = "products"
-
-    product_id = Column(Integer, primary_key=True, autoincrement=True)
-    product_name = Column(String(150), nullable=False)
-    category_id = Column(Integer, ForeignKey("categories.category_id"), nullable=False)
-    supplier_id = Column(Integer, ForeignKey("suppliers.supplier_id"))
-    price = Column(DECIMAL(12, 2), nullable=False)
-    discount_percent = Column(Integer)
-    image_url = Column(String(500))
-    description = Column(Text)
-    stock_quantity = Column(Integer)
-    expiration_date = Column(Date)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime)
-    is_deleted = Column(Boolean, default=False)
-    is_hot = Column(Boolean, default=False)
-
-    category = relationship("Category", back_populates="products")
-    supplier = relationship("Supplier", back_populates="products")
-    cart_items = relationship("CartItem", back_populates="product")
-    order_details = relationship("OrderDetail", back_populates="product")
-    invoice_details = relationship("InvoiceDetail", back_populates="product")
-    reviews = relationship("Review", back_populates="product")
-
-
+# ==============================
+# 4️⃣ Carts
+# ==============================
 class Cart(Base):
     __tablename__ = "carts"
 
     cart_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False, unique=True)
-    promo_id = Column(Integer, ForeignKey("promotions.promo_id"))
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    promo_id = Column(Integer, ForeignKey("promotions.promo_id", ondelete="SET NULL"))
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime)
 
@@ -150,50 +90,144 @@ class Cart(Base):
     items = relationship("CartItem", back_populates="cart", cascade="all, delete")
 
 
+# ==============================
+# 5️⃣ Cart Items
+# ==============================
 class CartItem(Base):
     __tablename__ = "cart_items"
+    __table_args__ = (UniqueConstraint("cart_id", "product_id", name="uq_cart_items_cart_product"),)
 
     cart_item_id = Column(Integer, primary_key=True, autoincrement=True)
-    cart_id = Column(Integer, ForeignKey("carts.cart_id"), nullable=False)
-    product_id = Column(Integer, ForeignKey("products.product_id"), nullable=False)
+    cart_id = Column(Integer, ForeignKey("carts.cart_id", ondelete="CASCADE"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Integer, default=1, nullable=False)
     price = Column(DECIMAL(12, 2), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    is_checked = Column(Boolean, default=False)
 
     cart = relationship("Cart", back_populates="items")
     product = relationship("Product", back_populates="cart_items")
 
 
-class Feedback(Base):
-    __tablename__ = "feedbacks"
+# ==============================
+# 6️⃣ Categories
+# ==============================
+class Category(Base):
+    __tablename__ = "categories"
 
-    feedback_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
-    subject = Column(String(200))
-    message = Column(Text)
+    category_id = Column(Integer, primary_key=True, autoincrement=True)
+    category_name = Column(String(100), unique=True, nullable=False)
+
+    products = relationship("Product", back_populates="category")
+
+
+# ==============================
+# 7️⃣ Manufacturers
+# ==============================
+class Manufacturer(Base):
+    __tablename__ = "manufacturers"
+
+    manufacturer_id = Column(Integer, primary_key=True, autoincrement=True)
+    manufacturer_name = Column(String(150), unique=True, nullable=False)
+    email = Column(String(150))
+    phone = Column(String(20))
+    address = Column(String(255))
     created_at = Column(DateTime, default=datetime.utcnow)
-    status = Column(Enum(FeedbackStatus))
 
-    user = relationship("User", back_populates="feedbacks")
+    products = relationship("Product", back_populates="manufacturer")
+    product_sources = relationship("ProductSource", back_populates="manufacturer")
 
 
+# ==============================
+# 8️⃣ Suppliers
+# ==============================
+class Supplier(Base):
+    __tablename__ = "suppliers"
+
+    supplier_id = Column(Integer, primary_key=True, autoincrement=True)
+    supplier_name = Column(String(100), unique=True, nullable=False)
+    email = Column(String(150))
+    phone = Column(String(20))
+    address = Column(String(255))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    product_sources = relationship("ProductSource", back_populates="supplier")
+
+
+# ==============================
+# 9️⃣ Products
+# ==============================
+class Product(Base):
+    __tablename__ = "products"
+
+    product_id = Column(Integer, primary_key=True, autoincrement=True)
+    product_name = Column(String(150), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.category_id", ondelete="RESTRICT"), nullable=False)
+    manufacturer_id = Column(Integer, ForeignKey("manufacturers.manufacturer_id", ondelete="SET NULL"))
+    price = Column(DECIMAL(12, 2), nullable=False)
+    discount_percent = Column(Integer, default=0)
+    image_url = Column(String(500))
+    description = Column(Text)
+    stock_quantity = Column(Integer, default=0)
+    expiration_date = Column(Date)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime)
+    is_deleted = Column(Boolean, default=False)
+    is_hot = Column(Boolean, default=False)
+
+    category = relationship("Category", back_populates="products")
+    manufacturer = relationship("Manufacturer", back_populates="products")
+    product_detail = relationship("ProductDetail", back_populates="product", uselist=False)
+    product_source = relationship("ProductSource", back_populates="product")
+    order_details = relationship("OrderDetail", back_populates="product")
+    invoice_details = relationship("InvoiceDetail", back_populates="product")
+    feedbacks = relationship("Feedback", back_populates="product")
+    reviews = relationship("Review", back_populates="product")
+    cart_items = relationship("CartItem", back_populates="product")
+
+
+# ==============================
+# 🔟 Product Sources
+# ==============================
+class ProductSource(Base):
+    __tablename__ = "product_sources"
+
+    product_source_id = Column(Integer, primary_key=True, autoincrement=True)
+    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    manufacturer_id = Column(Integer, ForeignKey("manufacturers.manufacturer_id", ondelete="SET NULL", onupdate="CASCADE"))
+    supplier_id = Column(Integer, ForeignKey("suppliers.supplier_id", ondelete="SET NULL", onupdate="CASCADE"))
+
+    product = relationship("Product", back_populates="product_source")
+    manufacturer = relationship("Manufacturer", back_populates="product_sources")
+    supplier = relationship("Supplier", back_populates="product_sources")
+    invoices = relationship("Invoice", back_populates="product_source")
+
+
+# ==============================
+# 11️⃣ Invoices
+# ==============================
 class Invoice(Base):
     __tablename__ = "invoices"
 
     invoice_id = Column(Integer, primary_key=True, autoincrement=True)
-    supplier_id = Column(Integer, ForeignKey("suppliers.supplier_id"), nullable=False)
+    product_source_id = Column(Integer, ForeignKey("product_sources.product_source_id", ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    total_amount = Column(DECIMAL(12, 2), default=0.00)
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime)
 
-    supplier = relationship("Supplier", back_populates="invoices")
-    details = relationship("InvoiceDetail", back_populates="invoice")
+    product_source = relationship("ProductSource", back_populates="invoices")
+    details = relationship("InvoiceDetail", back_populates="invoice", cascade="all, delete")
 
 
+# ==============================
+# 12️⃣ Invoice Details
+# ==============================
 class InvoiceDetail(Base):
     __tablename__ = "invoice_details"
 
     invoice_detail_id = Column(Integer, primary_key=True, autoincrement=True)
-    invoice_id = Column(Integer, ForeignKey("invoices.invoice_id"), nullable=False)
-    product_id = Column(Integer, ForeignKey("products.product_id"), nullable=False)
+    invoice_id = Column(Integer, ForeignKey("invoices.invoice_id", ondelete="CASCADE"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="CASCADE"), nullable=False)
     product_name = Column(String(150), nullable=False)
     quantity = Column(Integer, nullable=False)
     unit_price = Column(DECIMAL(12, 2), nullable=False)
@@ -203,13 +237,16 @@ class InvoiceDetail(Base):
     product = relationship("Product", back_populates="invoice_details")
 
 
+# ==============================
+# 13️⃣ Orders
+# ==============================
 class Order(Base):
     __tablename__ = "orders"
 
     order_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     promo_id = Column(Integer, ForeignKey("promotions.promo_id"))
-    status = Column(Enum(OrderStatus))
+    status = Column(Enum("pending", "confirmed", "delivered", "cancelled"), default="pending")
     delivery_address = Column(String(255))
     delivery_date = Column(DateTime)
     order_date = Column(DateTime, default=datetime.utcnow)
@@ -218,15 +255,18 @@ class Order(Base):
 
     user = relationship("User", back_populates="orders")
     promotion = relationship("Promotion", back_populates="orders")
-    order_details = relationship("OrderDetail", back_populates="order")
+    order_details = relationship("OrderDetail", back_populates="order", cascade="all, delete")
 
 
+# ==============================
+# 14️⃣ Order Details
+# ==============================
 class OrderDetail(Base):
     __tablename__ = "order_details"
 
     order_detail_id = Column(Integer, primary_key=True, autoincrement=True)
-    order_id = Column(Integer, ForeignKey("orders.order_id"), nullable=False)
-    product_id = Column(Integer, ForeignKey("products.product_id"), nullable=False)
+    order_id = Column(Integer, ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="CASCADE"), nullable=False)
     product_name = Column(String(150), nullable=False)
     unit_price = Column(DECIMAL(12, 2), nullable=False)
     quantity = Column(Integer, nullable=False)
@@ -236,12 +276,53 @@ class OrderDetail(Base):
     product = relationship("Product", back_populates="order_details")
 
 
+# ==============================
+# 15️⃣ Product Details
+# ==============================
+class ProductDetail(Base):
+    __tablename__ = "product_details"
+
+    product_detail_id = Column(Integer, primary_key=True, autoincrement=True)
+    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    ingredients = Column(Text)
+    usage = Column(Text)
+    storage = Column(Text)
+    nutrition_info = Column(Text)
+    origin = Column(String(255))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime)
+
+    product = relationship("Product", back_populates="product_detail")
+
+
+# ==============================
+# 16️⃣ Feedbacks
+# ==============================
+class Feedback(Base):
+    __tablename__ = "feedbacks"
+
+    feedback_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="SET NULL"))
+    subject = Column(String(200))
+    message = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    status = Column(Enum("pending", "in_progress", "resolved"), default="pending")
+
+    user = relationship("User", back_populates="feedbacks")
+    product = relationship("Product", back_populates="feedbacks")
+
+
+# ==============================
+# 17️⃣ Reviews
+# ==============================
 class Review(Base):
     __tablename__ = "reviews"
+    __table_args__ = (UniqueConstraint("product_id", "user_id", name="uq_reviews_product_user"),)
 
     review_id = Column(Integer, primary_key=True, autoincrement=True)
-    product_id = Column(Integer, ForeignKey("products.product_id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
     rating = Column(Integer)
     comment = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -251,10 +332,17 @@ class Review(Base):
     user = relationship("User", back_populates="reviews")
 
 
+# ==============================
+# 18️⃣ User Promotions
+# ==============================
 class UserPromotion(Base):
     __tablename__ = "user_promotions"
+    __table_args__ = (UniqueConstraint("user_id", "promo_id", name="uq_user_promotions_user_promo"),)
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     promo_id = Column(Integer, ForeignKey("promotions.promo_id"), nullable=False)
     used_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="user_promotions")
+    promotion = relationship("Promotion", back_populates="user_promotions")

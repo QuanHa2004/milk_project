@@ -22,7 +22,7 @@ export default function CartItem() {
             </div>
           </div>
 
-          <div className="text-center text-gray-900 dark:text-white">${product.price}</div>
+          <div className="text-center text-gray-900 dark:text-white">{product.price.toLocaleString('vi-VN')} VND</div>
 
           <div className="flex justify-center items-center gap-2 text-gray-900 dark:text-white">
             <button onClick={() => decrease(product.product_id)}>-</button>
@@ -37,7 +37,7 @@ export default function CartItem() {
           </div>
 
           <div className="text-right text-gray-900 dark:text-white font-semibold">
-            ${(product.price * product.quantity).toFixed(2)}
+            {(product.price * product.quantity).toLocaleString('vi-VN')} VND
           </div>
 
           <div className="col-span-full md:col-span-1 flex justify-end md:justify-center">

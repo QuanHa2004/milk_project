@@ -44,13 +44,13 @@ export default function Header() {
             className="text-text-color text-base font-medium leading-normal hover:text-primary"
             onClick={() => navigate("/home")}
           >
-            Home
+            Trang chủ
           </button>
           <button
             className="text-text-color text-base font-medium leading-normal hover:text-primary"
             onClick={() => navigate("/products")}
           >
-            Products
+            Sản phẩm
           </button>
         </nav>
       </div>
@@ -63,7 +63,7 @@ export default function Header() {
             </div>
             <input
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-text-main dark:text-white focus:outline-none focus:ring-2 focus:ring-primary border-none bg-gray-100 dark:bg-gray-800 h-full placeholder:text-text-secondary dark:placeholder-gray-400 px-4 text-base font-normal leading-normal"
-              placeholder="Search for 'Milk'"
+              placeholder="Tìm kiếm sản phẩm"
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
               onKeyDown={(e) => {

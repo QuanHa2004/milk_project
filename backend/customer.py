@@ -8,7 +8,7 @@ from auth import get_current_user
 customer = APIRouter(prefix="", tags=["Authentication"])
 
 
-@customer.get("/products", response_model=list[schema.ProductOut])
+@customer.get("/products", response_model=list[schema.ProductResponse])
 def get_products(db: Session = Depends(get_db)):
     return db.query(models.Product).all()
 
@@ -30,13 +30,13 @@ def get_product_detail(product_id: int, db: Session = Depends(get_db)):
     }
 
 
-@customer.get("/categories", response_model=list[schema.CategoryOut])
+@customer.get("/categories", response_model=list[schema.CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):
     categories = db.query(models.Category).all()
     return categories
 
 
-@customer.get("/products/{category_id}", response_model=list[schema.ProductOut])
+@customer.get("/products/{category_id}", response_model=list[schema.ProductResponse])
 def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
     category = (
         db.query(models.Category)
@@ -52,7 +52,7 @@ def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
     return products
 
 
-@customer.get("/products/search/{search_name}", response_model=list[schema.ProductOut])
+@customer.get("/products/search/{search_name}", response_model=list[schema.ProductResponse])
 def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
     products = (
         db.query(models.Product)
@@ -144,47 +144,42 @@ def remove_from_cart(
     return {"message": f"Đã xóa sản phẩm {product_id} khỏi giỏ hàng"}
 
 
-@customer.put("/cart/update")
+@customer.put("/cart/update", response_model=schema.CartItemResponse)
 def update_cart_item(
     item: schema.CartItemUpdate,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-
-    cart = (
-        db.query(models.Cart)
-        .filter(models.Cart.user_id == current_user.user_id)
-        .first()
-    )
+    # Lấy giỏ hàng của user
+    cart = db.query(models.Cart).filter(models.Cart.user_id == current_user.user_id).first()
     if not cart:
         raise HTTPException(status_code=404, detail="Giỏ hàng không tồn tại")
 
+    # Lấy item trong giỏ
     cart_item = (
         db.query(models.CartItem)
-        .filter(
-            models.CartItem.cart_id == cart.cart_id,
-            models.CartItem.product_id == item.product_id,
-        )
+        .filter(models.CartItem.cart_id == cart.cart_id,
+                models.CartItem.product_id == item.product_id)
         .first()
     )
-
     if not cart_item:
         raise HTTPException(status_code=404, detail="Sản phẩm không có trong giỏ hàng")
 
+    # Nếu quantity <= 0 thì xóa item
     if item.quantity <= 0:
         db.delete(cart_item)
         db.commit()
-        return {
-            "message": f"Đã xóa sản phẩm {item.product_id} khỏi giỏ hàng do số lượng <= 0"
-        }
+        raise HTTPException(
+            status_code=200,
+            detail=f"Đã xóa sản phẩm {item.product_id} khỏi giỏ hàng do số lượng <= 0"
+        )
 
+    # Cập nhật số lượng
     cart_item.quantity = item.quantity
     db.commit()
-    return {
-        "message": "Cập nhật sản phẩm thành công",
-        "product_id": item.product_id,
-        "quantity": item.quantity,
-    }
+    db.refresh(cart_item)  # refresh để trả về ORM mới nhất
+
+    return cart_item
 
 
 @customer.get("/cart/me")

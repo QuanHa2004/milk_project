@@ -16,66 +16,56 @@ export default function Checkout() {
                                         <div>
                                             <h2
                                                 class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-                                                Shipping Address</h2>
+                                                Địa chỉ giao hàng</h2>
                                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4 py-3">
                                                 <div class="col-span-full">
                                                     <label class="flex flex-col w-full">
                                                         <p
                                                             class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                            Full Name</p>
+                                                            Tên của bạn</p>
                                                         <input
                                                             class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
-                                                            placeholder="Enter your full name" type="text" />
+                                                            placeholder="Nhập tên của bạn" type="text" />
                                                     </label>
                                                 </div>
                                                 <div class="col-span-full">
                                                     <label class="flex flex-col w-full">
                                                         <p
                                                             class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                            Address Line 1</p>
+                                                            Địa chỉ 1</p>
                                                         <input
                                                             class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
-                                                            placeholder="123 Main St" type="text" />
+                                                            placeholder="" type="text" />
                                                     </label>
                                                 </div>
                                                 <div class="col-span-full">
                                                     <label class="flex flex-col w-full">
                                                         <p
                                                             class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                            Address Line 2 (Optional)</p>
+                                                            Địa chỉ 2 (nếu có)</p>
                                                         <input
                                                             class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
-                                                            placeholder="Apartment, suite, etc." type="text" />
+                                                            placeholder="" type="text" />
                                                     </label>
                                                 </div>
                                                 <div>
                                                     <label class="flex flex-col w-full">
                                                         <p
                                                             class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                            City</p>
+                                                            Thành phố</p>
                                                         <input
                                                             class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
-                                                            placeholder="New York" type="text" />
-                                                    </label>
-                                                </div>
-                                                <div>
-                                                    <label class="flex flex-col w-full">
-                                                        <p
-                                                            class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                            State</p>
-                                                        <input
-                                                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
-                                                            placeholder="NY" type="text" />
+                                                            placeholder="" type="text" />
                                                     </label>
                                                 </div>
                                                 <div class="sm:col-span-2">
                                                     <label class="flex flex-col w-full">
                                                         <p
                                                             class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                            Zip Code</p>
+                                                            Mã Zip</p>
                                                         <input
                                                             class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
-                                                            placeholder="10001" type="text" />
+                                                            placeholder="" type="text" />
                                                     </label>
                                                 </div>
                                             </div>
@@ -83,7 +73,7 @@ export default function Checkout() {
                                         <div>
                                             <h2
                                                 class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5 flex items-center gap-2">
-                                                Payment Method
+                                                Phương thức thanh toán
                                                 <span class="material-symbols-outlined text-xl text-gray-400">lock</span>
                                             </h2>
                                             <div class="px-4 py-3 space-y-4">
@@ -106,17 +96,17 @@ export default function Checkout() {
                                                         <label class="flex flex-col w-full">
                                                             <p
                                                                 class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                                Card Number</p>
+                                                                Số thẻ</p>
                                                             <input
                                                                 class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
-                                                                placeholder="•••• •••• •••• ••••" type="text" />
+                                                                placeholder="" type="text" />
                                                         </label>
                                                     </div>
                                                     <div class="col-span-2">
                                                         <label class="flex flex-col w-full">
                                                             <p
                                                                 class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">
-                                                                Expiration Date</p>
+                                                                Ngày hết hạn</p>
                                                             <input
                                                                 class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-background-dark focus:border-primary dark:focus:border-primary h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal"
                                                                 placeholder="MM / YY" type="text" />
@@ -151,11 +141,11 @@ export default function Checkout() {
                                         class="bg-white dark:bg-background-dark/50 rounded-xl p-6 border border-[#dbe2e6] dark:border-gray-700">
                                         <h2
                                             class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-6">
-                                            Your Order</h2>
+                                            Đơn hàng của bạn</h2>
                                         <CartSummary />
                                         <button
-                                            class="w-full mt-8 flex items-center justify-center rounded-lg h-14 bg-primary text-white text-lg font-bold leading-normal tracking-[0.015em]">Place
-                                            Order</button>
+                                            class="w-full mt-8 flex items-center justify-center rounded-lg h-14 bg-primary text-white text-lg font-bold leading-normal tracking-[0.015em]">
+                                            Đặt hàng</button>
                                     </div>
                                 </div>
                             </div>
