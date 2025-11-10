@@ -13,7 +13,7 @@ def get_products(db: Session = Depends(get_db)):
     return db.query(models.Product).all()
 
 
-@customer.get("/product/{product_id}")
+@customer.get("/products/{product_id}")
 def get_product_detail(product_id: int, db: Session = Depends(get_db)):
     product = (
         db.query(models.Product).filter(models.Product.product_id == product_id).first()
@@ -22,7 +22,7 @@ def get_product_detail(product_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại")
     return {
         "product_id": product.product_id,
-        "name": product.product_name,
+        "product_name": product.product_name,
         "description": product.description,
         "price": product.price,
         "quantity": product.stock_quantity,
@@ -36,7 +36,7 @@ def get_categories(db: Session = Depends(get_db)):
     return categories
 
 
-@customer.get("/products/{category_id}", response_model=list[schema.ProductResponse])
+@customer.get("/{category_id}/products", response_model=list[schema.ProductResponse])
 def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
     category = (
         db.query(models.Category)
@@ -65,7 +65,7 @@ def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
     return products
 
 
-@customer.post("/cart/add")
+@customer.post("/carts/add")
 def add_to_cart(
     item: schema.CartItemCreate,
     db: Session = Depends(get_db),
@@ -105,6 +105,7 @@ def add_to_cart(
             product_id=item.product_id,
             quantity=item.quantity,
             price=product.price,
+            is_checked=False
         )
         db.add(new_item)
 
@@ -112,7 +113,7 @@ def add_to_cart(
     return {"message": "Đã thêm sản phẩm vào giỏ hàng", "cart_id": cart.cart_id}
 
 
-@customer.delete("/cart/remove/{product_id}")
+@customer.delete("/carts/remove/{product_id}")
 def remove_from_cart(
     product_id: int,
     db: Session = Depends(get_db),
@@ -144,7 +145,7 @@ def remove_from_cart(
     return {"message": f"Đã xóa sản phẩm {product_id} khỏi giỏ hàng"}
 
 
-@customer.put("/cart/update", response_model=schema.CartItemResponse)
+@customer.put("/carts/update", response_model=schema.CartItemResponse)
 def update_cart_item(
     item: schema.CartItemUpdate,
     db: Session = Depends(get_db),
@@ -182,7 +183,7 @@ def update_cart_item(
     return cart_item
 
 
-@customer.get("/cart/me")
+@customer.get("/carts/current_user")
 def get_my_cart(db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     user_id = current_user.user_id
 

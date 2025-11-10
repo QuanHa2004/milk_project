@@ -12,13 +12,13 @@ import SearchResults from '../pages/customer/search-results';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/registation" element={<Registration />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/registration" element={<Registration />} />
+      <Route path="/" element={<Home />} />
       <Route path="/products" element={<Product />} />
-      <Route path="/products/category/:category_id" element={<Product />} />
-      <Route path="/product-detail/:product_id" element={<ProductDetail />} />
-      <Route path="/cart" element={<Cart />} />
+      <Route path="/categories/:category_id/products" element={<Product />} />
+      <Route path="/product-details/:product_id" element={<ProductDetail />} />
+      <Route path="/carts" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/search-results" element={<SearchResults />} />
     </Routes>

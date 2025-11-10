@@ -1,27 +1,52 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import useCart from "../context/cart-context";
 
 export default function Header() {
   const navigate = useNavigate();
   const [searchName, setSearchName] = useState("");
-
-  const { cartItems } = useCart();
-
+  const [currentUser, setCurrentUser] = useState({});
+  const { cartItems, logOut, updateToken } = useCart();
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      fetch("http://localhost:8000/current_user", {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+          return res.json();
+        })
+        .then((data) => setCurrentUser(data))
+        .catch((err) => console.error("Lỗi:", err));
+    }
+
+  }, []);
+
   const handleSearch = () => {
-  fetch(`http://localhost:8000/products/search/${searchName}`)
-    .then((res) => res.json())
-    .then((data) => {
-      navigate("/products", { state: { result: data } });
-    })
-    .catch((err) => console.error("Failed to search:", err));
+    fetch(`http://localhost:8000/products/search/${searchName}`)
+      .then((res) => res.json())
+      .then((data) => {
+        navigate("/products", { state: { result: data } });
+      })
+      .catch((err) => console.error("Không tìm thấy", err));
+  };
+
+const handleLogOut = () => {
+  updateToken(null);
+  logOut();
+  setCurrentUser("Đăng nhập");
+  navigate("/");
 };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-white px-4 md:px-10 lg:px-40 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-primary/30 py-3">
+    <header className="fixed top-0 left-0 w-full z-50 bg-white px-4 md:px-10 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-primary/30 py-3">
       <div className="flex items-center gap-8">
         <div className="flex items-center gap-4 text-secondary">
           <div className="size-8">
@@ -42,7 +67,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-9">
           <button
             className="text-text-color text-base font-medium leading-normal hover:text-primary"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/")}
           >
             Trang chủ
           </button>
@@ -52,31 +77,58 @@ export default function Header() {
           >
             Sản phẩm
           </button>
+
+          <label className="flex flex-col min-w-40 !h-10 max-w-sm w-full">
+            <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
+              <div onClick={handleSearch} className="text-text-secondary dark:text-gray-400 flex border-none bg-gray-100 dark:bg-gray-800 items-center justify-center pl-4 rounded-l-lg border-r-0">
+                <span className="material-symbols-outlined">search</span>
+              </div>
+              <input
+                className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-text-main dark:text-white focus:outline-none focus:ring-2 focus:ring-primary border-none bg-gray-100 dark:bg-gray-800 h-full placeholder:text-text-secondary dark:placeholder-gray-400 px-4 text-base font-normal leading-normal"
+                placeholder="Tìm kiếm sản phẩm"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearch();
+                }}
+              />
+            </div>
+          </label>
         </nav>
       </div>
 
       <div className="flex items-center gap-4">
-        <label className="flex flex-col min-w-40 !h-10 max-w-sm w-full">
-          <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
-            <div onClick={handleSearch} className="text-text-secondary dark:text-gray-400 flex border-none bg-gray-100 dark:bg-gray-800 items-center justify-center pl-4 rounded-l-lg border-r-0">
-              <span className="material-symbols-outlined">search</span>
+
+
+        <div>
+          {currentUser?.full_name ? (
+            <div className="flex items-center gap-2 bg-primary/20 text-secondary px-3 py-2 rounded-full hover:bg-primary/30 transition-colors">
+              <span className="material-symbols-outlined text-2xl">person</span>
+              <div className="flex flex-col">
+                <p className="text-sm font-medium">{currentUser.full_name}</p>
+                <button
+                  onClick={handleLogOut}
+                  className="text-red-500 text-xs hover:underline"
+                >
+                  Đăng xuất
+                </button>
+              </div>
             </div>
-            <input
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-text-main dark:text-white focus:outline-none focus:ring-2 focus:ring-primary border-none bg-gray-100 dark:bg-gray-800 h-full placeholder:text-text-secondary dark:placeholder-gray-400 px-4 text-base font-normal leading-normal"
-              placeholder="Tìm kiếm sản phẩm"
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSearch();
-              }}
-            />
-          </div>
-        </label>
-        
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="flex items-center gap-2 bg-primary/20 text-secondary px-3 py-2 rounded-full hover:bg-primary/30 transition-colors"
+            >
+              <span className="material-symbols-outlined">person</span>
+              <p>Đăng nhập</p>
+            </button>
+          )}
+        </div>
+
 
         <button
           className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors"
-          onClick={() => navigate("/cart")}
+          onClick={() => navigate("/carts")}
         >
           <span className="material-symbols-outlined">shopping_cart</span>
           {totalItems > 0 && (
@@ -86,10 +138,17 @@ export default function Header() {
           )}
         </button>
 
-
-        <button className="md:hidden flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
-          <span className="material-symbols-outlined">menu</span>
+        {/* <button className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
+          <span className="material-symbols-outlined">inventory</span>
         </button>
+
+        <button className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
+          <span className="material-symbols-outlined">list_alt</span>
+        </button>
+
+        <button className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
+          <span className="material-symbols-outlined">history</span>
+        </button> */}
       </div>
     </header>
 

@@ -12,16 +12,8 @@ function ProductCard({ product }) {
 
   const handleAdd = async (e) => {
     e.stopPropagation();
-
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
-      navigate("/login");
-      return;
-    }
-
     try {
-      await addToCart(product.product_id, 1);
+      await addToCart(product, 1);
     } catch (err) {
       console.error(err);
     }
@@ -58,11 +50,11 @@ export default function BestSellingProduct() {
       .then((data) => {
         const mapped = data.map((sp) => ({
           product_id: sp.product_id,
-          name: sp.name,
+          product_name: sp.product_name,
           description: sp.description,
           price: sp.price,
           imageUrl: sp.image_url,
-          link: `/product-detail/${sp.product_id}`,
+          link: `/product-details/${sp.product_id}`,
         }));
         setProductList(mapped);
       });

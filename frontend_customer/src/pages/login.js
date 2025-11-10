@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useCart from '../context/cart-context';
 
 export default function Login() {
   const navigate = useNavigate();
-
+  const { updateToken} = useCart();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -20,16 +20,14 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     try {
-      // FastAPI yêu cầu form-data (x-www-form-urlencoded)
       const formBody = new URLSearchParams();
       formBody.append("username", formData.email);
       formBody.append("password", formData.password);
 
-      const response = await fetch("http://localhost:8000/login", {
+      const res = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -37,24 +35,22 @@ export default function Login() {
         body: formBody.toString(),
       });
 
-      if (!response.ok) {
-        throw new Error("Sai email hoặc mật khẩu");
-      }
+      if (!res.ok) throw new Error("Sai email hoặc mật khẩu");
 
-      const data = await response.json();
+      const data = await res.json();
 
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
       localStorage.setItem("role_id", data.role_id);
-      window.dispatchEvent(new Event("storage"));
+      updateToken(data.access_token);
 
       if (data.role_id === 1) {
         window.location.href = "http://localhost:3001/admin/dashboard";
       } else {
-        navigate("/home");
+        navigate("/");
       }
     } catch (err) {
-      setError(err.message);
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -140,10 +136,6 @@ export default function Login() {
             </div>
           </label>
 
-          {error && (
-            <p className="text-red-600 text-sm text-center mt-1">{error}</p>
-          )}
-
           <span
             className="text-sm font-medium text-primary hover:underline text-right mt-1"
           >
@@ -162,7 +154,7 @@ export default function Login() {
         <div className="mt-8 text-center">
           <p className="text-sm text-slate-600 dark:text-slate-300">
             Chưa có tài khoản?{" "}
-            <span onClick={() => navigate('/registation')} className="font-bold text-primary hover:underline">
+            <span onClick={() => navigate('/registration')} className="font-bold text-primary hover:underline">
               Đăng ký
             </span>
           </p>

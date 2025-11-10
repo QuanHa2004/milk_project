@@ -31,17 +31,17 @@ export default function Explore() {
     {
       title: "SỮA TƯƠI",
       imageUrl: "https://th.bing.com/th/id/OSK.HEROYeXAVJkpUhbzwfZSLTVavNxcuAiBlYC11vqRLgZ8NqQ?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
-      link: "/products/category/1",
+      link: "/categories/1/products",
     },
     {
       title: "SỮA HẠT",
       imageUrl: "https://images.pexels.com/photos/821365/pexels-photo-821365.jpeg",
-      link: "/products/category/5",
+      link: "/categories/2/products",
     },
     {
       title: "PHÔ MAI",
       imageUrl: "https://images.pexels.com/photos/5945660/pexels-photo-5945660.jpeg",
-      link: "/products/category/6",
+      link: "/categories/3/products",
     },
   ];
 

@@ -8,21 +8,13 @@ function ProductCard({ product }) {
   const { addToCart } = useCart();
 
   const handleClick = () => {
-    navigate(`/product-detail/${product.product_id}`);
+    navigate(`/product-details/${product.product_id}`);
   };
 
   const handleAdd = async (e) => {
     e.stopPropagation();
-
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
-      navigate("/login");
-      return;
-    }
-
     try {
-      await addToCart(product.product_id, 1);
+      await addToCart(product, 1);
     } catch (err) {
       console.error(err);
     }
@@ -78,7 +70,7 @@ export default function ProductOption() {
       setProducts(searchResult);
     } else {
       const url = category_id
-        ? `http://localhost:8000/products/${category_id}`
+        ? `http://localhost:8000/${category_id}/products`
         : `http://localhost:8000/products`;
 
       fetch(url)
@@ -88,8 +80,9 @@ export default function ProductOption() {
     }
   }, [category_id, searchResult]);
 
-  const clickCategory = (id) => {
-    navigate(`/products/category/${id}`);
+  const clickCategory = (category_id) => {
+    navigate(`/categories/${category_id}/products`);
+
   };
 
   return (
@@ -127,7 +120,7 @@ export default function ProductOption() {
             ))}
           </ul>
         ) : (
-          <p className="text-center text-white">No products yet</p>
+          <p className="text-center text-white">Chưa có sản phẩm</p>
         )}
       </div>
     </>

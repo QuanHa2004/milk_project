@@ -38,6 +38,7 @@ export default function Registration() {
           phone: formData.phone,
           address: formData.address,
           password: formData.password,
+          role_id: 2
         }),
       });
 
@@ -103,7 +104,7 @@ export default function Registration() {
                         onChange={handleChange}
                         placeholder={field.placeholder}
                         required={field.name !== "phone" && field.name !== "address"}
-                        className="form-input flex w-full rounded-lg bg-white dark:bg-gray-700 p-[15px] text-base placeholder:text-gray-400 text-text-light dark:text-text-dark"
+                        className="form-input flex h-12 w-full border border-slate-300 dark:border-slate-600 bg-white/70 dark:bg-slate-800/50 p-3 text-base text-slate-800 dark:text-white placeholder:text-slate-500 focus:border-primary focus:ring-2 focus:ring-primary/40 rounded-l-lg"
                       />
                     </label>
                   </div>
@@ -126,7 +127,7 @@ export default function Registration() {
               <div className="pt-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Bạn đã có tài khoản?{" "}
-                  <span onClick={()=>navigate('/')} className="font-medium text-primary hover:underline">
+                  <span onClick={() => navigate('/login')} className="font-medium text-primary hover:underline">
                     Đăng nhập
                   </span>
                 </p>

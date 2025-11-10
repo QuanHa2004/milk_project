@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import Header from '../../component/header';
@@ -9,11 +9,10 @@ export default function ProductDetail() {
     const { product_id } = useParams();
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
-    const navigate = useNavigate();
     const { addToCart } = useCart();
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/product/${product_id}`)
+        fetch(`http://127.0.0.1:8000/products/${product_id}`)
             .then((res) => res.json())
             .then((data) => {
                 setProduct(data);
@@ -22,16 +21,8 @@ export default function ProductDetail() {
 
     const handleAdd = async (e) => {
         e.stopPropagation();
-
-        const token = localStorage.getItem("access_token");
-        if (!token) {
-            alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
-            navigate("/login");
-            return;
-        }
-
         try {
-            await addToCart(product.product_id, quantity);
+            await addToCart(product, quantity);
         } catch (err) {
             console.error(err);
         }
@@ -58,7 +49,7 @@ export default function ProductDetail() {
                                 <div class="w-full lg:w-1/2 flex flex-col">
                                     <h1
                                         class="text-[#333333] dark:text-white tracking-light text-[32px] font-bold leading-tight">
-                                        {product.name}</h1>
+                                        {product.product_name}</h1>
                                     <p class="text-[#333333] dark:text-gray-300 text-base font-normal leading-normal py-3">
                                         {product.description}
                                     </p>

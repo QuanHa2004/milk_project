@@ -8,9 +8,6 @@ from sqlalchemy.orm import relationship, declarative_base
 Base = declarative_base()
 
 
-# ==============================
-# 1️⃣ Roles
-# ==============================
 class Role(Base):
     __tablename__ = "roles"
 
@@ -21,9 +18,6 @@ class Role(Base):
     users = relationship("User", back_populates="role")
 
 
-# ==============================
-# 2️⃣ Users
-# ==============================
 class User(Base):
     __tablename__ = "users"
 
@@ -40,16 +34,12 @@ class User(Base):
 
     role = relationship("Role", back_populates="users")
     carts = relationship("Cart", back_populates="user")
-    feedbacks = relationship("Feedback", back_populates="user")
     reviews = relationship("Review", back_populates="user")
     orders = relationship("Order", back_populates="user")
     promotions_created = relationship("Promotion", back_populates="creator")
     user_promotions = relationship("UserPromotion", back_populates="user")
 
 
-# ==============================
-# 3️⃣ Promotions
-# ==============================
 class Promotion(Base):
     __tablename__ = "promotions"
 
@@ -68,31 +58,22 @@ class Promotion(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     creator = relationship("User", back_populates="promotions_created")
-    carts = relationship("Cart", back_populates="promotion")
     orders = relationship("Order", back_populates="promotion")
     user_promotions = relationship("UserPromotion", back_populates="promotion")
 
 
-# ==============================
-# 4️⃣ Carts
-# ==============================
 class Cart(Base):
     __tablename__ = "carts"
 
     cart_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
-    promo_id = Column(Integer, ForeignKey("promotions.promo_id", ondelete="SET NULL"))
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime)
 
     user = relationship("User", back_populates="carts")
-    promotion = relationship("Promotion", back_populates="carts")
     items = relationship("CartItem", back_populates="cart", cascade="all, delete")
 
 
-# ==============================
-# 5️⃣ Cart Items
-# ==============================
 class CartItem(Base):
     __tablename__ = "cart_items"
     __table_args__ = (UniqueConstraint("cart_id", "product_id", name="uq_cart_items_cart_product"),)
@@ -109,9 +90,6 @@ class CartItem(Base):
     product = relationship("Product", back_populates="cart_items")
 
 
-# ==============================
-# 6️⃣ Categories
-# ==============================
 class Category(Base):
     __tablename__ = "categories"
 
@@ -121,9 +99,6 @@ class Category(Base):
     products = relationship("Product", back_populates="category")
 
 
-# ==============================
-# 7️⃣ Manufacturers
-# ==============================
 class Manufacturer(Base):
     __tablename__ = "manufacturers"
 
@@ -138,9 +113,6 @@ class Manufacturer(Base):
     product_sources = relationship("ProductSource", back_populates="manufacturer")
 
 
-# ==============================
-# 8️⃣ Suppliers
-# ==============================
 class Supplier(Base):
     __tablename__ = "suppliers"
 
@@ -154,9 +126,6 @@ class Supplier(Base):
     product_sources = relationship("ProductSource", back_populates="supplier")
 
 
-# ==============================
-# 9️⃣ Products
-# ==============================
 class Product(Base):
     __tablename__ = "products"
 
@@ -181,14 +150,10 @@ class Product(Base):
     product_source = relationship("ProductSource", back_populates="product")
     order_details = relationship("OrderDetail", back_populates="product")
     invoice_details = relationship("InvoiceDetail", back_populates="product")
-    feedbacks = relationship("Feedback", back_populates="product")
     reviews = relationship("Review", back_populates="product")
     cart_items = relationship("CartItem", back_populates="product")
 
 
-# ==============================
-# 🔟 Product Sources
-# ==============================
 class ProductSource(Base):
     __tablename__ = "product_sources"
 
@@ -203,9 +168,6 @@ class ProductSource(Base):
     invoices = relationship("Invoice", back_populates="product_source")
 
 
-# ==============================
-# 11️⃣ Invoices
-# ==============================
 class Invoice(Base):
     __tablename__ = "invoices"
 
@@ -219,9 +181,6 @@ class Invoice(Base):
     details = relationship("InvoiceDetail", back_populates="invoice", cascade="all, delete")
 
 
-# ==============================
-# 12️⃣ Invoice Details
-# ==============================
 class InvoiceDetail(Base):
     __tablename__ = "invoice_details"
 
@@ -237,9 +196,6 @@ class InvoiceDetail(Base):
     product = relationship("Product", back_populates="invoice_details")
 
 
-# ==============================
-# 13️⃣ Orders
-# ==============================
 class Order(Base):
     __tablename__ = "orders"
 
@@ -258,9 +214,6 @@ class Order(Base):
     order_details = relationship("OrderDetail", back_populates="order", cascade="all, delete")
 
 
-# ==============================
-# 14️⃣ Order Details
-# ==============================
 class OrderDetail(Base):
     __tablename__ = "order_details"
 
@@ -276,9 +229,6 @@ class OrderDetail(Base):
     product = relationship("Product", back_populates="order_details")
 
 
-# ==============================
-# 15️⃣ Product Details
-# ==============================
 class ProductDetail(Base):
     __tablename__ = "product_details"
 
@@ -295,27 +245,6 @@ class ProductDetail(Base):
     product = relationship("Product", back_populates="product_detail")
 
 
-# ==============================
-# 16️⃣ Feedbacks
-# ==============================
-class Feedback(Base):
-    __tablename__ = "feedbacks"
-
-    feedback_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
-    product_id = Column(Integer, ForeignKey("products.product_id", ondelete="SET NULL"))
-    subject = Column(String(200))
-    message = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    status = Column(Enum("pending", "in_progress", "resolved"), default="pending")
-
-    user = relationship("User", back_populates="feedbacks")
-    product = relationship("Product", back_populates="feedbacks")
-
-
-# ==============================
-# 17️⃣ Reviews
-# ==============================
 class Review(Base):
     __tablename__ = "reviews"
     __table_args__ = (UniqueConstraint("product_id", "user_id", name="uq_reviews_product_user"),)
@@ -332,9 +261,6 @@ class Review(Base):
     user = relationship("User", back_populates="reviews")
 
 
-# ==============================
-# 18️⃣ User Promotions
-# ==============================
 class UserPromotion(Base):
     __tablename__ = "user_promotions"
     __table_args__ = (UniqueConstraint("user_id", "promo_id", name="uq_user_promotions_user_promo"),)
