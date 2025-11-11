@@ -16,11 +16,14 @@ export default function Home() {
             <section class="px-4 md:px-10 lg:px-40 py-5">
               <div class="@container">
                 <div class="@[480px]:p-4">
-                  <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4"
+                  <div class="flex min-h-[880px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4"
                     data-alt="A picturesque farm scene with cows grazing in a green pasture under a clear blue sky."
                     style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.pixabay.com/photo/2017/10/28/06/48/cow-2896329_1280.jpg")` }}>
                     <div class="flex flex-col gap-2 text-center">
-                        <p>Fresh Milk</p>
+                      <h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-6xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
+                        Fresh Milk
+                      </h1>
+                      <h2 class="text-white text-lg font-normal leading-normal @[480px]:text-xl @[480px]:font-normal @[480px]:leading-normal">Ghé thăm cửa hàng của chúng tôi</h2>
                     </div>
                     <button
                       class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 @[480px]:h-14 @[480px]:px-6 bg-secondary text-white text-base font-bold leading-normal tracking-[0.015em] @[480px]:text-lg @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em] hover:bg-opacity-90 transition-opacity">

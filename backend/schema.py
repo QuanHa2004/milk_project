@@ -110,7 +110,6 @@ class ManufacturerCreate(ManufacturerBase):
 
 class ManufacturerResponse(ManufacturerBase):
     manufacturer_id: int
-    created_at: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -132,7 +131,6 @@ class SupplierCreate(SupplierBase):
 
 class SupplierResponse(SupplierBase):
     supplier_id: int
-    created_at: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -162,7 +160,6 @@ class ProductCreate(ProductBase):
 class ProductResponse(ProductBase):
     product_id: int
     created_at: Optional[datetime]
-    updated_at: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -186,8 +183,6 @@ class ProductDetailCreate(ProductDetailBase):
 
 class ProductDetailResponse(ProductDetailBase):
     product_detail_id: int
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -291,7 +286,6 @@ class InvoiceDetailBase(BaseModel):
     product_name: str
     quantity: int
     unit_price: Decimal
-    subtotal: Optional[Decimal] = None
 
 
 class InvoiceDetailCreate(InvoiceDetailBase):
@@ -350,7 +344,6 @@ class CartItemUpdate(BaseModel):
 
 
 class CartItemResponse(CartItemBase):
-    cart_item_id: int
     created_at: Optional[datetime]
 
     class Config:
@@ -368,7 +361,6 @@ class CartCreate(CartBase):
 class CartResponse(CartBase):
     cart_id: int
     created_at: Optional[datetime]
-    updated_at: Optional[datetime]
     items: Optional[List[CartItemResponse]] = []
 
     class Config:

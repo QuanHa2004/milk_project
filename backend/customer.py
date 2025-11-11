@@ -73,6 +73,7 @@ def add_to_cart(
 ):
     user_id = current_user.user_id
 
+    # Lấy hoặc tạo giỏ hàng
     cart = db.query(models.Cart).filter(models.Cart.user_id == user_id).first()
     if not cart:
         cart = models.Cart(user_id=user_id)
@@ -80,14 +81,12 @@ def add_to_cart(
         db.commit()
         db.refresh(cart)
 
-    product = (
-        db.query(models.Product)
-        .filter(models.Product.product_id == item.product_id)
-        .first()
-    )
+    # Kiểm tra sản phẩm tồn tại
+    product = db.query(models.Product).filter(models.Product.product_id == item.product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại")
 
+    # Kiểm tra sản phẩm đã có trong giỏ chưa
     cart_item = (
         db.query(models.CartItem)
         .filter(
@@ -96,10 +95,13 @@ def add_to_cart(
         )
         .first()
     )
+
     if cart_item:
+        # Nếu có rồi thì cập nhật số lượng và giá
         cart_item.quantity += item.quantity
         cart_item.price = product.price
     else:
+        # Nếu chưa có thì thêm mới
         new_item = models.CartItem(
             cart_id=cart.cart_id,
             product_id=item.product_id,
@@ -110,6 +112,7 @@ def add_to_cart(
         db.add(new_item)
 
     db.commit()
+
     return {"message": "Đã thêm sản phẩm vào giỏ hàng", "cart_id": cart.cart_id}
 
 
