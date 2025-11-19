@@ -176,7 +176,7 @@ class OrderDetail(Base):
     order_detail_id = Column(Integer, primary_key=True)
     order_id = Column(Integer, ForeignKey("order.order_id"), nullable=False)
     product_id = Column(Integer, ForeignKey("product.product_id"), nullable=False)
-    unit_price = Column(DECIMAL(12, 2), nullable=False)
+    price = Column(DECIMAL(12, 2), nullable=False)
     quantity = Column(Integer, nullable=False)
     total_amount = Column(DECIMAL(12, 2))
 

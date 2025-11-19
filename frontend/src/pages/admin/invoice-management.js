@@ -1,9 +1,9 @@
 import SideBar from "../../component/admin/side-bar";
 import { useNavigate } from "react-router-dom";
 
-import PromotionList from "../../component/admin/promotion-list";
+import InvoiceList from "../../component/admin/invoice-list";
 
-export default function PromotionManagement() {
+export default function InvoiceManagement() {
   const navigate = useNavigate();
   return (
     <div className="relative flex min-h-screen">
@@ -15,12 +15,12 @@ export default function PromotionManagement() {
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <div className="flex min-w-72 flex-col gap-1">
                   <p className="text-gray-900 dark:text-white text-3xl font-black">
-                    Quản lý mã giảm giá
+                    Quản lý phiếu nhập hàng
                   </p>
                 </div>
-                <button onClick={() => navigate('/admin/create-promotion')} className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
+                <button onClick={() => navigate('/admin/new-invoice')} className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
                   <span className="material-symbols-outlined text-base">add</span>
-                  <span >Tạo mã giảm giá</span>
+                  <span >Nhập hàng mới</span>
                 </button>
               </div>
             </div>
@@ -33,14 +33,14 @@ export default function PromotionManagement() {
                   </div>
                   <input
                     className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-[#617c89] px-2 text-base font-normal leading-normal"
-                    placeholder="Tìm mã giảm giá"
+                    placeholder="Tìm phiếu nhập hàng"
                     value=""
                     readOnly
                   />
                 </div>
               </label>
             </div>
-            <PromotionList/>
+            <InvoiceList/>
           </main>
         </div>
       </div>

@@ -5,8 +5,9 @@ export default function InvoiceList() {
                 <table className="w-full table-fixed">
                     <thead className="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tên danh mục</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Số lượng sản phẩm</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Mã phiếu</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nhà cung cấp</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tổng tiền</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Hành động</th>
                         </tr>
                     </thead>
@@ -14,8 +15,9 @@ export default function InvoiceList() {
                         {[
                             {
                                 code: "SUMMER20",
-                                type: "23",
-                                creator: "Xem chi tiết | Xóa",
+                                type: "Vinamilk",
+                                value: "500.000",
+                                creator: "Xem chi tiết",
                             }
                         ].map((item, i) => (
                             <tr
@@ -24,6 +26,7 @@ export default function InvoiceList() {
                             >
                                 <td className="px-4 py-2 font-medium">{item.code}</td>
                                 <td className="px-4 py-2">{item.type}</td>
+                                <td className="px-4 py-2">{item.value}</td>
                                 <td className="px-4 py-2">{item.creator}</td>
                             </tr>
                         ))}

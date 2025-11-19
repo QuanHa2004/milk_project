@@ -1,7 +1,7 @@
 import SideBar from "../../component/admin/side-bar";
 import { useNavigate } from "react-router-dom";
 
-import PromotionList from "../../component/admin/category-list";
+import CategoryList from "../../component/admin/category-list";
 export default function CategoryManagement() {
   const navigate = useNavigate();
   return (
@@ -31,14 +31,14 @@ export default function CategoryManagement() {
                     </div>
                     <input
                       className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-[#617c89] px-2 text-base font-normal leading-normal"
-                      placeholder="Tìm sản phẩm"
+                      placeholder="Tìm danh mục"
                       value=""
                       readOnly
                     />
                   </div>
                 </label>
               </div>
-              <PromotionList />
+              <CategoryList/>
             </div>
           </main>
         </div>

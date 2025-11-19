@@ -30,7 +30,7 @@ export default function CreatePromotion() {
                                                 </p>
                                                 <input
                                                     className="form-input w-full rounded-lg border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-800 h-14 p-[15px]"
-                                                    placeholder="e.g., FRESHMILK10"
+                                                    placeholder="MILK-QD-2025-2026"
                                                 />
                                             </label>
 
@@ -40,7 +40,7 @@ export default function CreatePromotion() {
                                                 </p>
                                                 <input
                                                     className="form-input w-full rounded-lg border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-800 h-14 p-[15px]"
-                                                    placeholder="e.g., FRESHMILK10"
+                                                    placeholder="Mô tả mã giảm giá"
                                                 />
                                             </label>
 
@@ -63,7 +63,7 @@ export default function CreatePromotion() {
                                                     <input
                                                         type="number"
                                                         className="form-input w-full rounded-lg border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-800 h-14 p-[15px]"
-                                                        placeholder="e.g., 10 or 5.00"
+                                                        placeholder="50.000, 10%"
                                                     />
                                                 </label>
                                             </div>
