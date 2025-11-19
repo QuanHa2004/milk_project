@@ -15,8 +15,8 @@ export default function Home() {
           <main class="flex-1 mt-10">
             <section class="px-4 md:px-10 lg:px-40 py-5">
               <div class="@container">
-                <div class="@[480px]:p-4">
-                  <div class="flex min-h-[880px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4"
+                <div class="@[480px]">
+                  <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center"
                     data-alt="A picturesque farm scene with cows grazing in a green pasture under a clear blue sky."
                     style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.pixabay.com/photo/2017/10/28/06/48/cow-2896329_1280.jpg")` }}>
                     <div class="flex flex-col gap-2 text-center">

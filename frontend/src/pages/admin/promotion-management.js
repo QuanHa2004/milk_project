@@ -8,7 +8,7 @@ export default function PromotionManagement() {
   return (
     <div className="relative flex min-h-screen">
       <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-        <div className="flex flex-row min-h-screen">
+        <div className="ml-64 flex flex-row min-h-screen">
           <SideBar />
           <main className="flex-1 p-8">
             <div className="w-full max-w-7xl mx-auto">
@@ -18,9 +18,9 @@ export default function PromotionManagement() {
                     Quản lý mã giảm giá
                   </p>
                 </div>
-                <button onClick={() => navigate('/admin/add-product')} className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
+                <button onClick={() => navigate('/admin/create-promotion')} className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
                   <span className="material-symbols-outlined text-base">add</span>
-                  <span >Thêm mã giảm giá</span>
+                  <span >Tạo mã giảm giá</span>
                 </button>
               </div>
             </div>

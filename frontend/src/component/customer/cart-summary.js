@@ -1,34 +1,38 @@
 import useCart from "../../context/cart-context";
 
-export default function CartSummary() {
+export default function CartSummary({ showPaymentSection = false }) {
   const { cartItems } = useCart();
 
-  const subtotal = cartItems.reduce(
+  // Lọc chỉ những sản phẩm được chọn
+  const selectedItems = cartItems.filter(item => item.selected);
+
+  const total_amount = selectedItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
   const taxRate = 0.08;
-  const taxes = subtotal * taxRate;
-
-  const total = subtotal + taxes;
+  const taxes = total_amount * taxRate;
+  const total = total_amount + taxes;
 
   return (
     <div className="space-y-4 mt-4">
+      {/* Danh sách sản phẩm */}
       <div className="border-b border-gray-200 dark:border-gray-700 pb-2">
         {cartItems.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">Chưa có sản phẩm nào!</p>
         ) : (
           <ul className="space-y-1 text-gray-700 dark:text-gray-300">
-            {cartItems.map((item) => (
-              <li key={item.name} className="flex justify-between py-1">
-                <div className="flex flex-col">
-                  <span className="font-medium">{item.name}</span>
+            {selectedItems.map((item) => (
+              <li key={item.product_id} className="flex justify-between py-1 items-start">
+                <div className="flex-1 min-w-[0] flex flex-col">
+                  <span className="font-medium break-words">{item.product_name}</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     Số lượng: {item.quantity}
                   </span>
                 </div>
-                <span className="font-medium">
+
+                <span className="font-medium ml-4 flex-shrink-0 whitespace-nowrap">
                   {(item.price * item.quantity).toLocaleString('vi-VN')} VND
                 </span>
               </li>
@@ -37,22 +41,36 @@ export default function CartSummary() {
         )}
       </div>
 
+      {/* Tổng tiền ước tính */}
       <div className="flex justify-between text-gray-600 dark:text-gray-300">
         <span>Tổng tiền ước tính</span>
-        <span>{subtotal.toLocaleString('vi-VN')} VND</span>
+        <span>{total_amount.toLocaleString('vi-VN')} VND</span>
       </div>
 
+      {/* Thuế */}
       <div className="flex justify-between text-gray-600 dark:text-gray-300">
         <span>Thuế</span>
         <span>{taxes.toLocaleString('vi-VN')} VND</span>
       </div>
 
+      {showPaymentSection && selectedItems.length > 0 && (
+        <div className="mt-6 space-y-4">
+          <div className="flex justify-between items-center text-gray-600 dark:text-gray-300">
+            <span>Voucher áp dụng</span>
+            <span className="text-gray-500 dark:text-gray-400">Chưa áp dụng</span>
+          </div>
+        </div>
+      )}
+
       <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
 
+      {/* Tổng cộng */}
       <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
         <span>Tổng cộng</span>
         <span>{total.toLocaleString('vi-VN')} VND</span>
       </div>
+
+
     </div>
   );
 }

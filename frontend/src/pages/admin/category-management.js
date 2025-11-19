@@ -1,11 +1,13 @@
 import SideBar from "../../component/admin/side-bar";
+import { useNavigate } from "react-router-dom";
 
 import PromotionList from "../../component/admin/category-list";
 export default function CategoryManagement() {
+  const navigate = useNavigate();
   return (
     <div className="relative flex min-h-screen">
       <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-        <div className="flex flex-row min-h-screen">
+        <div className="ml-64 flex flex-row min-h-screen">
           <SideBar />
           <main className="flex-1 p-8">
             <div className="w-full max-w-7xl mx-auto">
@@ -15,13 +17,13 @@ export default function CategoryManagement() {
                     Quản lý danh mục
                   </p>
                 </div>
-                <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
+                <button onClick={() => navigate('/admin/add-category')} className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
                   <span className="material-symbols-outlined text-base">add</span>
                   <span >Thêm danh mục</span>
                 </button>
               </div>
 
-               <div className="mb-6">
+              <div className="mb-6">
                 <label className="flex flex-col min-w-40 h-12 w-full max-w-lg">
                   <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-white dark:bg-background-dark border border-[#E0E0E0] dark:border-gray-700">
                     <div className="text-[#617c89] flex items-center justify-center pl-4">
@@ -36,9 +38,7 @@ export default function CategoryManagement() {
                   </div>
                 </label>
               </div>
-
               <PromotionList />
-
             </div>
           </main>
         </div>

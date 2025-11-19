@@ -1,6 +1,6 @@
 import SideBar from "../../component/admin/side-bar";
 
-export default function CreatePromotion() {
+export default function AddCategory() {
     return (
         <div className="relative flex min-h-screen">
             <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">

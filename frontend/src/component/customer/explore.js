@@ -34,12 +34,12 @@ export default function Explore() {
       link: "/categories/1/products",
     },
     {
-      title: "SỮA HẠT",
+      title: "PHÔ MAI",
       imageUrl: "https://images.pexels.com/photos/821365/pexels-photo-821365.jpeg",
       link: "/categories/2/products",
     },
     {
-      title: "PHÔ MAI",
+      title: "YOGURT",
       imageUrl: "https://images.pexels.com/photos/5945660/pexels-photo-5945660.jpeg",
       link: "/categories/3/products",
     },

@@ -82,7 +82,11 @@ def add_to_cart(
         db.refresh(cart)
 
     # Kiểm tra sản phẩm tồn tại
-    product = db.query(models.Product).filter(models.Product.product_id == item.product_id).first()
+    product = (
+        db.query(models.Product)
+        .filter(models.Product.product_id == item.product_id)
+        .first()
+    )
     if not product:
         raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại")
 
@@ -97,23 +101,27 @@ def add_to_cart(
     )
 
     if cart_item:
-        # Nếu có rồi thì cập nhật số lượng và giá
+        # ✔️ Nếu đã tồn tại → cập nhật số lượng
         cart_item.quantity += item.quantity
-        cart_item.price = product.price
     else:
-        # Nếu chưa có thì thêm mới
+        # ✔️ Nếu chưa có → tạo mới
         new_item = models.CartItem(
             cart_id=cart.cart_id,
             product_id=item.product_id,
             quantity=item.quantity,
-            price=product.price,
             is_checked=False
         )
         db.add(new_item)
 
     db.commit()
 
-    return {"message": "Đã thêm sản phẩm vào giỏ hàng", "cart_id": cart.cart_id}
+    return {
+        "message": "Đã thêm sản phẩm vào giỏ hàng",
+        "cart_id": cart.cart_id,
+        "product_id": item.product_id,
+        "quantity": item.quantity,
+    }
+
 
 
 @customer.delete("/carts/remove/{product_id}")
@@ -210,8 +218,8 @@ def get_my_cart(db: Session = Depends(get_db), current_user=Depends(get_current_
     total_price = 0
 
     for cart_item, product in cart_items:
-        subtotal = float(cart_item.price) * cart_item.quantity
-        total_price += subtotal
+        total_amount = float(product.price) * cart_item.quantity
+        total_price += total_amount
 
         items.append(
             {
@@ -219,9 +227,10 @@ def get_my_cart(db: Session = Depends(get_db), current_user=Depends(get_current_
                 "product_name": product.product_name,
                 "description": product.description,
                 "image_url": product.image_url,
-                "price": float(cart_item.price),
+                "price" : product.price,
                 "quantity": cart_item.quantity,
-                "total": subtotal,
+                "total": total_amount,
+                "selected": False,
             }
         )
 

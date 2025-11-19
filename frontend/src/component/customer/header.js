@@ -38,12 +38,12 @@ export default function Header() {
       .catch((err) => console.error("Không tìm thấy", err));
   };
 
-const handleLogOut = () => {
-  updateToken(null);
-  logOut();
-  setCurrentUser("Đăng nhập");
-  navigate("/");
-};
+  const handleLogOut = () => {
+    updateToken(null);
+    logOut();
+    setCurrentUser("Đăng nhập");
+    navigate("/");
+  };
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white px-4 md:px-10 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-primary/30 py-3">
@@ -100,20 +100,22 @@ const handleLogOut = () => {
       <div className="flex items-center gap-4">
 
 
-        <div>
+        <div className="relative">
           {currentUser?.full_name ? (
-            <div className="flex items-center gap-2 bg-primary/20 text-secondary px-3 py-2 rounded-full hover:bg-primary/30 transition-colors">
-              <span className="material-symbols-outlined text-2xl">person</span>
-              <div className="flex flex-col">
-                <p className="text-sm font-medium">{currentUser.full_name}</p>
+            <details className="relative group">
+              <summary className="flex items-center gap-2 bg-primary/20 text-secondary px-3 py-2 rounded-full hover:bg-primary/30 transition-colors list-none cursor-pointer">
+                <span className="material-symbols-outlined text-2xl">person</span>
+                <p className="font-medium">{currentUser.full_name}</p>
+              </summary>
+              <div className="flex flex-col absolute right-0 mt-2 w-28 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg py-2 z-50">
                 <button
                   onClick={handleLogOut}
-                  className="text-red-500 text-xs hover:underline"
+                  className="w-full text-left px-4 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                 >
                   Đăng xuất
                 </button>
               </div>
-            </div>
+            </details>
           ) : (
             <button
               onClick={() => navigate("/login")}

@@ -4,7 +4,7 @@ import useCart from '../context/cart-context';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { updateToken} = useCart();
+  const { updateToken } = useCart();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,9 +29,7 @@ export default function Login() {
 
       const res = await fetch("http://localhost:8000/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: formBody.toString(),
       });
 
@@ -39,22 +37,32 @@ export default function Login() {
 
       const data = await res.json();
 
+      // Lưu token và role
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
       localStorage.setItem("role_id", data.role_id);
       updateToken(data.access_token);
 
+      const redirectAfterLogin = localStorage.getItem("post_login_redirect");
+
+      // Redirect theo role hoặc redirectAfterLogin
       if (data.role_id === 1) {
-        window.location.href = "http://localhost:3001/admin/dashboard";
+        navigate("/admin/dashboard"); // client-side routing
+      } else if (redirectAfterLogin) {
+        localStorage.removeItem("post_login_redirect");
+        navigate(redirectAfterLogin);
       } else {
         navigate("/");
       }
+
     } catch (err) {
       console.log(err);
+      alert(err.message);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div

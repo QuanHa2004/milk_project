@@ -2,14 +2,14 @@ import SideBar from "../../component/admin/side-bar";
 
 export default function Dashboard() {
   return (
-    <div className="relative flex min-h-screen">
+    <div className="ml-64 relative flex min-h-screen">
       
       <SideBar />
       {/* Main Content */}
       <main className="flex-1 p-8">
         <div className="flex flex-col gap-8">
           <div className="flex min-w-72 flex-col gap-1">
-            <p className="text-text-light-primary dark:text-text-dark-primary text-4xl font-black leading-tight tracking-[-0.033em]">
+            <p className="text-gray-900 dark:text-white text-3xl font-black">
               Bảng điều khiển
             </p>
           </div>

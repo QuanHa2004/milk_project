@@ -2,11 +2,21 @@ from datetime import datetime, date
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr, Field
 from decimal import Decimal
+from enum import Enum
 
 
-# ==========================
-# 1️⃣ Roles
-# ==========================
+class DiscountTypeEnum(str, Enum):
+    percent = "percent"
+    fixed = "fixed"
+
+
+class StatusEnum(str, Enum):
+    pending = "pending"
+    confirmed = "confirmed"
+    delivered = "delivered"
+    cancelled = "cancelled"
+
+
 class RoleBase(BaseModel):
     role_name: str
     description: Optional[str] = None
@@ -23,9 +33,6 @@ class RoleResponse(RoleBase):
         from_attributes = True
 
 
-# ==========================
-# 2️⃣ Users
-# ==========================
 class UserBase(BaseModel):
     full_name: str
     email: EmailStr
@@ -48,13 +55,10 @@ class UserResponse(UserBase):
         from_attributes = True
 
 
-# ==========================
-# 3️⃣ Promotions
-# ==========================
 class PromotionBase(BaseModel):
     promo_code: str
     description: Optional[str] = None
-    discount_type: Optional[str] = None
+    discount_type: DiscountTypeEnum
     discount_value: Decimal
     min_order_value: Optional[Decimal] = None
     max_uses: Optional[int] = None
@@ -76,9 +80,6 @@ class PromotionResponse(PromotionBase):
         from_attributes = True
 
 
-# ==========================
-# 4️⃣ Categories
-# ==========================
 class CategoryBase(BaseModel):
     category_name: str
 
@@ -94,9 +95,6 @@ class CategoryResponse(CategoryBase):
         from_attributes = True
 
 
-# ==========================
-# 5️⃣ Manufacturers
-# ==========================
 class ManufacturerBase(BaseModel):
     manufacturer_name: str
     email: Optional[str] = None
@@ -115,9 +113,6 @@ class ManufacturerResponse(ManufacturerBase):
         from_attributes = True
 
 
-# ==========================
-# 6️⃣ Suppliers
-# ==========================
 class SupplierBase(BaseModel):
     supplier_name: str
     email: Optional[str] = None
@@ -136,9 +131,6 @@ class SupplierResponse(SupplierBase):
         from_attributes = True
 
 
-# ==========================
-# 7️⃣ Products
-# ==========================
 class ProductBase(BaseModel):
     product_name: str
     category_id: int
@@ -165,9 +157,6 @@ class ProductResponse(ProductBase):
         from_attributes = True
 
 
-# ==========================
-# 8️⃣ Product Details
-# ==========================
 class ProductDetailBase(BaseModel):
     product_id: int
     ingredients: Optional[str] = None
@@ -182,35 +171,10 @@ class ProductDetailCreate(ProductDetailBase):
 
 
 class ProductDetailResponse(ProductDetailBase):
-    product_detail_id: int
-
     class Config:
         from_attributes = True
 
 
-# ==========================
-# 9️⃣ Product Sources
-# ==========================
-class ProductSourceBase(BaseModel):
-    product_id: int
-    manufacturer_id: Optional[int] = None
-    supplier_id: Optional[int] = None
-
-
-class ProductSourceCreate(ProductSourceBase):
-    pass
-
-
-class ProductSourceResponse(ProductSourceBase):
-    product_source_id: int
-
-    class Config:
-        from_attributes = True
-
-
-# ==========================
-# 🔟 Orders
-# ==========================
 class OrderBase(BaseModel):
     user_id: int
     promo_id: Optional[int] = None
@@ -233,16 +197,12 @@ class OrderResponse(OrderBase):
         from_attributes = True
 
 
-# ==========================
-# 11️⃣ Order Details
-# ==========================
 class OrderDetailBase(BaseModel):
     order_id: int
     product_id: int
-    product_name: str
-    unit_price: Decimal
+    price: float
     quantity: int
-    subtotal: Optional[Decimal] = None
+    total_amount: Optional[Decimal] = None
 
 
 class OrderDetailCreate(OrderDetailBase):
@@ -256,11 +216,8 @@ class OrderDetailResponse(OrderDetailBase):
         from_attributes = True
 
 
-# ==========================
-# 12️⃣ Invoices
-# ==========================
 class InvoiceBase(BaseModel):
-    product_source_id: int
+    supplier_id: int
     total_amount: Optional[Decimal] = Decimal("0.00")
 
 
@@ -277,15 +234,11 @@ class InvoiceResponse(InvoiceBase):
         from_attributes = True
 
 
-# ==========================
-# 13️⃣ Invoice Details
-# ==========================
 class InvoiceDetailBase(BaseModel):
     invoice_id: int
     product_id: int
-    product_name: str
     quantity: int
-    unit_price: Decimal
+    price: Decimal
 
 
 class InvoiceDetailCreate(InvoiceDetailBase):
@@ -299,9 +252,6 @@ class InvoiceDetailResponse(InvoiceDetailBase):
         from_attributes = True
 
 
-# ==========================
-# 15️⃣ Reviews
-# ==========================
 class ReviewBase(BaseModel):
     product_id: int
     user_id: int
@@ -322,13 +272,9 @@ class ReviewResponse(ReviewBase):
         from_attributes = True
 
 
-# ==========================
-# 16️⃣ Cart & Cart Items
-# ==========================
 class CartItemBase(BaseModel):
     product_id: int
     quantity: int
-    price: Decimal
     is_checked: Optional[bool] = False
 
 
@@ -344,7 +290,6 @@ class CartItemUpdate(BaseModel):
 
 
 class CartItemResponse(CartItemBase):
-    created_at: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -367,9 +312,6 @@ class CartResponse(CartBase):
         from_attributes = True
 
 
-# ==========================
-# 17️⃣ User Promotions
-# ==========================
 class UserPromotionBase(BaseModel):
     user_id: int
     promo_id: int

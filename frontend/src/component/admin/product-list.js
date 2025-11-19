@@ -25,7 +25,7 @@ export default function ProductList() {
                             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-2/12">Hành động</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+                    {/* <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                         {ProductList.map((item, i) => (
                             <tr
                                 key={i}
@@ -49,7 +49,7 @@ export default function ProductList() {
                                 </td>
                             </tr>
                         ))}
-                    </tbody>
+                    </tbody> */}
                 </table>
             </div>
         </div>

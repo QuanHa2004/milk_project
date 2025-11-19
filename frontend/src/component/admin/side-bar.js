@@ -6,13 +6,14 @@ export default function SideBar() {
   const navItems = [
     { icon: "dashboard", text: "Bảng điều khiển", url: "/admin/dashboard" },
     { icon: "shopping_cart", text: "Đơn hàng", url: "/admin/order" },
+    { icon: "category", text: "Danh mục", url: "/admin/category" },
     { icon: "inventory_2", text: "Sản phẩm", url: "/admin/product" },
     { icon: "campaign", text: "Mã giảm giá", url: "/admin/promotion" },
-    { icon: "category", text: "Danh mục", url: "/admin/category" },
+    { icon: "inventory", text: "Nhập hàng", url: "/admin/invoice" },
   ];
 
   return (
-    <spanside className="sticky top-0 h-screen w-64 flex-shrink-0 bg-card-light dark:bg-card-dark p-4 border-r border-border-light dark:border-border-dark">
+    <div className="fixed top-0 left-0 h-screen w-64 flex-shrink-0 bg-card-light dark:bg-card-dark p-4 border-r border-border-light dark:border-border-dark">
       <div className="flex h-full flex-col justify-between">
         {/* Top Section */}
         <div className="flex flex-col gap-8">
@@ -74,6 +75,6 @@ export default function SideBar() {
           </div>
         </div>
       </div>
-    </spanside>
+    </div>
   );
 }

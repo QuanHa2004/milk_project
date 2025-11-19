@@ -54,6 +54,7 @@ export function CartProvider({ children }) {
 
       const data = await res.json();
       setCartItems(data.items || []);
+      console.log(data);
     } catch (err) {
       console.error(err);
       setCartItems([]);
@@ -92,7 +93,7 @@ export function CartProvider({ children }) {
           image_url: product.imageUrl,
           price: product.price,
           quantity,
-          is_checked: product.is_checked ?? false,
+          is_checked: false,
         });
       localStorage.setItem("cart", JSON.stringify(cart));
       setCartItems(cart); // react khong biet localStorage da thay doi, phai su dung state de re-render lai UI
@@ -109,8 +110,7 @@ export function CartProvider({ children }) {
         body: JSON.stringify({
           product_id: product.product_id,
           quantity,
-          price: product.price,
-          is_checked: product.is_checked ?? false,
+          is_checked: false,
         }),
       });
       if (!res.ok) throw new Error("Không thể thêm sản phẩm");
@@ -188,6 +188,7 @@ export function CartProvider({ children }) {
         updateQuantity,
         increase,
         decrease,
+        setCartItems,
       }}
     >
       {children}
