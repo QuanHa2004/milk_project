@@ -35,7 +35,7 @@ function ProductCard({ product }) {
             {product.product_name}
           </p>
           <p className="text-base font-medium text-gray-700 dark:text-gray-300">
-            {product.price.toLocaleString('vi-VN')} VND
+            {Number(product.price).toLocaleString('vi-VN')} VND
           </p>
         </div>
         <button

@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-import models
+import model
 from database import get_db
 import schema
 from auth import get_current_user
@@ -10,13 +10,13 @@ customer = APIRouter(prefix="", tags=["Authentication"])
 
 @customer.get("/products", response_model=list[schema.ProductResponse])
 def get_products(db: Session = Depends(get_db)):
-    return db.query(models.Product).all()
+    return db.query(model.Product).all()
 
 
 @customer.get("/products/{product_id}")
 def get_product_detail(product_id: int, db: Session = Depends(get_db)):
     product = (
-        db.query(models.Product).filter(models.Product.product_id == product_id).first()
+        db.query(model.Product).filter(model.Product.product_id == product_id).first()
     )
     if not product:
         raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại")
@@ -25,38 +25,39 @@ def get_product_detail(product_id: int, db: Session = Depends(get_db)):
         "product_name": product.product_name,
         "description": product.description,
         "price": product.price,
-        "quantity": product.stock_quantity,
         "image_url": product.image_url,
     }
 
 
 @customer.get("/categories", response_model=list[schema.CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):
-    categories = db.query(models.Category).all()
+    categories = db.query(model.Category).all()
     return categories
 
 
 @customer.get("/{category_id}/products", response_model=list[schema.ProductResponse])
 def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
     category = (
-        db.query(models.Category)
-        .filter(models.Category.category_id == category_id)
+        db.query(model.Category)
+        .filter(model.Category.category_id == category_id)
         .first()
     )
     if not category:
         raise HTTPException(status_code=404, detail="Không tìm thấy danh mục")
 
     products = (
-        db.query(models.Product).filter(models.Product.category_id == category_id).all()
+        db.query(model.Product).filter(model.Product.category_id == category_id).all()
     )
     return products
 
 
-@customer.get("/products/search/{search_name}", response_model=list[schema.ProductResponse])
+@customer.get(
+    "/products/search/{search_name}", response_model=list[schema.ProductResponse]
+)
 def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
     products = (
-        db.query(models.Product)
-        .filter(models.Product.product_name.ilike(f"%{search_name}%"))
+        db.query(model.Product)
+        .filter(model.Product.product_name.ilike(f"%{search_name}%"))
         .all()
     )
     if not products:
@@ -74,17 +75,17 @@ def add_to_cart(
     user_id = current_user.user_id
 
     # Lấy hoặc tạo giỏ hàng
-    cart = db.query(models.Cart).filter(models.Cart.user_id == user_id).first()
+    cart = db.query(model.Cart).filter(model.Cart.user_id == user_id).first()
     if not cart:
-        cart = models.Cart(user_id=user_id)
+        cart = model.Cart(user_id=user_id)
         db.add(cart)
         db.commit()
         db.refresh(cart)
 
     # Kiểm tra sản phẩm tồn tại
     product = (
-        db.query(models.Product)
-        .filter(models.Product.product_id == item.product_id)
+        db.query(model.Product)
+        .filter(model.Product.product_id == item.product_id)
         .first()
     )
     if not product:
@@ -92,10 +93,10 @@ def add_to_cart(
 
     # Kiểm tra sản phẩm đã có trong giỏ chưa
     cart_item = (
-        db.query(models.CartItem)
+        db.query(model.CartItem)
         .filter(
-            models.CartItem.cart_id == cart.cart_id,
-            models.CartItem.product_id == item.product_id,
+            model.CartItem.cart_id == cart.cart_id,
+            model.CartItem.product_id == item.product_id,
         )
         .first()
     )
@@ -105,11 +106,11 @@ def add_to_cart(
         cart_item.quantity += item.quantity
     else:
         # ✔️ Nếu chưa có → tạo mới
-        new_item = models.CartItem(
+        new_item = model.CartItem(
             cart_id=cart.cart_id,
             product_id=item.product_id,
             quantity=item.quantity,
-            is_checked=False
+            is_checked=False,
         )
         db.add(new_item)
 
@@ -123,7 +124,6 @@ def add_to_cart(
     }
 
 
-
 @customer.delete("/carts/remove/{product_id}")
 def remove_from_cart(
     product_id: int,
@@ -132,18 +132,16 @@ def remove_from_cart(
 ):
 
     cart = (
-        db.query(models.Cart)
-        .filter(models.Cart.user_id == current_user.user_id)
-        .first()
+        db.query(model.Cart).filter(model.Cart.user_id == current_user.user_id).first()
     )
     if not cart:
         raise HTTPException(status_code=404, detail="Giỏ hàng không tồn tại")
 
     cart_item = (
-        db.query(models.CartItem)
+        db.query(model.CartItem)
         .filter(
-            models.CartItem.cart_id == cart.cart_id,
-            models.CartItem.product_id == product_id,
+            model.CartItem.cart_id == cart.cart_id,
+            model.CartItem.product_id == product_id,
         )
         .first()
     )
@@ -163,15 +161,19 @@ def update_cart_item(
     current_user=Depends(get_current_user),
 ):
     # Lấy giỏ hàng của user
-    cart = db.query(models.Cart).filter(models.Cart.user_id == current_user.user_id).first()
+    cart = (
+        db.query(model.Cart).filter(model.Cart.user_id == current_user.user_id).first()
+    )
     if not cart:
         raise HTTPException(status_code=404, detail="Giỏ hàng không tồn tại")
 
     # Lấy item trong giỏ
     cart_item = (
-        db.query(models.CartItem)
-        .filter(models.CartItem.cart_id == cart.cart_id,
-                models.CartItem.product_id == item.product_id)
+        db.query(model.CartItem)
+        .filter(
+            model.CartItem.cart_id == cart.cart_id,
+            model.CartItem.product_id == item.product_id,
+        )
         .first()
     )
     if not cart_item:
@@ -183,7 +185,7 @@ def update_cart_item(
         db.commit()
         raise HTTPException(
             status_code=200,
-            detail=f"Đã xóa sản phẩm {item.product_id} khỏi giỏ hàng do số lượng <= 0"
+            detail=f"Đã xóa sản phẩm {item.product_id} khỏi giỏ hàng do số lượng <= 0",
         )
 
     # Cập nhật số lượng
@@ -198,7 +200,7 @@ def update_cart_item(
 def get_my_cart(db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     user_id = current_user.user_id
 
-    cart = db.query(models.Cart).filter(models.Cart.user_id == user_id).first()
+    cart = db.query(model.Cart).filter(model.Cart.user_id == user_id).first()
     if not cart:
         return {
             "user_id": user_id,
@@ -208,9 +210,9 @@ def get_my_cart(db: Session = Depends(get_db), current_user=Depends(get_current_
         }
 
     cart_items = (
-        db.query(models.CartItem, models.Product)
-        .join(models.Product, models.CartItem.product_id == models.Product.product_id)
-        .filter(models.CartItem.cart_id == cart.cart_id)
+        db.query(model.CartItem, model.Product)
+        .join(model.Product, model.CartItem.product_id == model.Product.product_id)
+        .filter(model.CartItem.cart_id == cart.cart_id)
         .all()
     )
 
@@ -227,7 +229,7 @@ def get_my_cart(db: Session = Depends(get_db), current_user=Depends(get_current_
                 "product_name": product.product_name,
                 "description": product.description,
                 "image_url": product.image_url,
-                "price" : product.price,
+                "price": product.price,
                 "quantity": cart_item.quantity,
                 "total": total_amount,
                 "selected": False,

@@ -6,7 +6,7 @@ from jose.exceptions import ExpiredSignatureError
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 
-import models
+import model
 import schema
 from database import get_db
 
@@ -78,7 +78,7 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    user = db.query(models.User).filter(models.User.user_id == user_id).first()
+    user = db.query(model.User).filter(model.User.user_id == user_id).first()
     if user is None:
         raise credentials_exception
 
@@ -96,12 +96,12 @@ def register(request: schema.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Mật khẩu không được để trống")
 
     existing_user = (
-        db.query(models.User).filter(models.User.email == request.email).first()
+        db.query(model.User).filter(model.User.email == request.email).first()
     )
     if existing_user:
         raise HTTPException(status_code=400, detail="Email đã tồn tại")
 
-    new_user = models.User(
+    new_user = model.User(
         full_name=request.full_name,
         email=request.email,
         phone=request.phone,
@@ -122,7 +122,7 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
 
-    user = db.query(models.User).filter(models.User.email == form_data.username).first()
+    user = db.query(model.User).filter(model.User.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Sai email hoặc mật khẩu")
 
@@ -177,7 +177,7 @@ def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get
     except JWTError:
         raise HTTPException(status_code=401, detail="Token không hợp lệ")
 
-    user = db.query(models.User).filter(models.User.user_id == user_id).first()
+    user = db.query(model.User).filter(model.User.user_id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Không tìm thấy người dùng")
 

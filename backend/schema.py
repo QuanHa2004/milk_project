@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr, Field
 from decimal import Decimal
@@ -60,6 +60,7 @@ class PromotionBase(BaseModel):
     description: Optional[str] = None
     discount_type: DiscountTypeEnum
     discount_value: Decimal
+    max_discount_value: Optional[Decimal] = None
     min_order_value: Optional[Decimal] = None
     max_uses: Optional[int] = None
     start_date: datetime
@@ -135,12 +136,10 @@ class ProductBase(BaseModel):
     product_name: str
     category_id: int
     manufacturer_id: Optional[int] = None
-    price: float
+    price: Decimal
     discount_percent: Optional[int] = 0
     image_url: Optional[str] = None
     description: Optional[str] = None
-    stock_quantity: Optional[int] = 0
-    expiration_date: Optional[date] = None
     is_deleted: Optional[bool] = False
     is_hot: Optional[bool] = False
 
@@ -174,6 +173,24 @@ class ProductDetailResponse(ProductDetailBase):
     class Config:
         from_attributes = True
 
+class ProductBatchBase(BaseModel):
+    product_id: int
+    quantity: int = Field(..., ge=0, description="Số lượng tồn kho phải >= 0")
+    expiration_date: datetime
+    invoice_detail_id: Optional[int] = None # Để truy xuất nguồn gốc nhập hàng
+
+
+class ProductBatchCreate(ProductBatchBase):
+    pass
+    
+
+class ProductBatchResponse(ProductBatchBase):
+    batch_id: int
+    created_at: Optional[datetime]
+
+    class Config:
+        from_attributes = True
+
 
 class OrderBase(BaseModel):
     user_id: int
@@ -200,7 +217,7 @@ class OrderResponse(OrderBase):
 class OrderDetailBase(BaseModel):
     order_id: int
     product_id: int
-    price: float
+    price: Decimal
     quantity: int
     total_amount: Optional[Decimal] = None
 

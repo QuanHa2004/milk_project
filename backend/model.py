@@ -1,7 +1,18 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, DECIMAL, Enum, Date, Boolean
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Text,
+    DateTime,
+    ForeignKey,
+    DECIMAL,
+    Enum,
+    Boolean,
+)
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
+
 
 class Role(Base):
     __tablename__ = "role"
@@ -11,6 +22,7 @@ class Role(Base):
     description = Column(String(255))
 
     users = relationship("User", back_populates="role")
+
 
 class User(Base):
     __tablename__ = "user"
@@ -33,6 +45,7 @@ class User(Base):
     promotions_created = relationship("Promotion", back_populates="creator")
     user_promotions = relationship("UserPromotion", back_populates="user")
 
+
 class Cart(Base):
     __tablename__ = "cart"
 
@@ -43,6 +56,7 @@ class Cart(Base):
     user = relationship("User", back_populates="cart")
     items = relationship("CartItem", back_populates="cart", cascade="all, delete")
 
+
 class Category(Base):
     __tablename__ = "category"
 
@@ -50,6 +64,7 @@ class Category(Base):
     category_name = Column(String(100), unique=True, nullable=False)
 
     products = relationship("Product", back_populates="category")
+
 
 class Manufacturer(Base):
     __tablename__ = "manufacturer"
@@ -62,6 +77,7 @@ class Manufacturer(Base):
 
     products = relationship("Product", back_populates="manufacturer")
 
+
 class Product(Base):
     __tablename__ = "product"
 
@@ -73,8 +89,6 @@ class Product(Base):
     discount_percent = Column(Integer, default=0)
     image_url = Column(String(500))
     description = Column(Text)
-    stock_quantity = Column(Integer, default=0)
-    expiration_date = Column(Date)
     created_at = Column(DateTime, default=datetime.utcnow)
     is_deleted = Column(Boolean, default=False)
     is_hot = Column(Boolean, default=False)
@@ -85,7 +99,9 @@ class Product(Base):
     invoice_details = relationship("InvoiceDetail", back_populates="product")
     order_details = relationship("OrderDetail", back_populates="product")
     details = relationship("ProductDetail", back_populates="product", uselist=False)
+    batches = relationship("ProductBatch", back_populates="product", uselist=False)
     reviews = relationship("Review", back_populates="product")
+
 
 class CartItem(Base):
     __tablename__ = "cart_item"
@@ -98,6 +114,7 @@ class CartItem(Base):
     cart = relationship("Cart", back_populates="items")
     product = relationship("Product", back_populates="cart_items")
 
+
 class Supplier(Base):
     __tablename__ = "supplier"
 
@@ -109,28 +126,33 @@ class Supplier(Base):
 
     invoices = relationship("Invoice", back_populates="supplier")
 
+
 class Invoice(Base):
     __tablename__ = "invoice"
 
-    import_id = Column(Integer, primary_key=True)
+    invoice_id = Column(Integer, primary_key=True)
     supplier_id = Column(Integer, ForeignKey("supplier.supplier_id"))
     total_amount = Column(DECIMAL(12, 2), default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     supplier = relationship("Supplier", back_populates="invoices")
-    details = relationship("InvoiceDetail", back_populates="invoice", cascade="all, delete")
+    details = relationship(
+        "InvoiceDetail", back_populates="invoice", cascade="all, delete"
+    )
+
 
 class InvoiceDetail(Base):
     __tablename__ = "invoice_detail"
 
     invoice_detail_id = Column(Integer, primary_key=True)
-    invoice_id = Column(Integer, ForeignKey("invoice.import_id"), nullable=False)
+    invoice_id = Column(Integer, ForeignKey("invoice.invoice_id"), nullable=False)
     product_id = Column(Integer, ForeignKey("product.product_id"), nullable=False)
     quantity = Column(Integer, nullable=False)
     price = Column(DECIMAL(12, 2), nullable=False)
 
     invoice = relationship("Invoice", back_populates="details")
     product = relationship("Product", back_populates="invoice_details")
+
 
 class Promotion(Base):
     __tablename__ = "promotion"
@@ -140,6 +162,7 @@ class Promotion(Base):
     description = Column(String(255))
     discount_type = Column(Enum("percent", "fixed"))
     discount_value = Column(DECIMAL(10, 2), nullable=False)
+    max_discount_value = Column(DECIMAL(12, 2))
     min_order_value = Column(DECIMAL(12, 2))
     max_uses = Column(Integer)
     uses_count = Column(Integer, default=0)
@@ -153,13 +176,16 @@ class Promotion(Base):
     orders = relationship("Order", back_populates="promotion")
     user_promotions = relationship("UserPromotion", back_populates="promotion")
 
+
 class Order(Base):
     __tablename__ = "order"
 
     order_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
     promo_id = Column(Integer, ForeignKey("promotion.promo_id"))
-    status = Column(Enum("pending", "confirmed", "delivered", "cancelled"), default="pending")
+    status = Column(
+        Enum("pending", "confirmed", "delivered", "cancelled"), default="pending"
+    )
     delivery_address = Column(String(255))
     delivery_date = Column(DateTime)
     order_date = Column(DateTime, default=datetime.utcnow)
@@ -169,6 +195,7 @@ class Order(Base):
     user = relationship("User", back_populates="orders")
     promotion = relationship("Promotion", back_populates="orders")
     details = relationship("OrderDetail", back_populates="order", cascade="all, delete")
+
 
 class OrderDetail(Base):
     __tablename__ = "order_detail"
@@ -183,6 +210,7 @@ class OrderDetail(Base):
     order = relationship("Order", back_populates="details")
     product = relationship("Product", back_populates="order_details")
 
+
 class ProductDetail(Base):
     __tablename__ = "product_detail"
 
@@ -194,6 +222,19 @@ class ProductDetail(Base):
     origin = Column(String(255))
 
     product = relationship("Product", back_populates="details")
+
+
+class ProductBatch(Base):
+    __tablename__ = "product_batch"
+
+    batch_id = Column(Integer, primary_key=True)
+    product_id = Column(Integer, ForeignKey("product.product_id"), nullable=False)
+    quantity = Column(Integer)
+    expiration_date = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    product = relationship("Product", back_populates="batches")
+
 
 class Review(Base):
     __tablename__ = "review"
@@ -208,6 +249,7 @@ class Review(Base):
 
     product = relationship("Product", back_populates="reviews")
     user = relationship("User", back_populates="reviews")
+
 
 class UserPromotion(Base):
     __tablename__ = "user_promotion"

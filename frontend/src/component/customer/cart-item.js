@@ -50,7 +50,7 @@ export default function CartItem() {
           </div>
 
           <div className="text-center text-gray-900 dark:text-white">
-            {product.price.toLocaleString('vi-VN')} VND
+            {Number(product.price).toLocaleString('vi-VN')} VND
           </div>
 
           <div className="flex justify-center items-center gap-2 text-gray-900 dark:text-white">
