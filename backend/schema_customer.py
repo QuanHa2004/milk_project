@@ -10,13 +10,6 @@ class DiscountTypeEnum(str, Enum):
     fixed = "fixed"
 
 
-class StatusEnum(str, Enum):
-    pending = "pending"
-    confirmed = "confirmed"
-    delivered = "delivered"
-    cancelled = "cancelled"
-
-
 class RoleBase(BaseModel):
     role_name: str
     description: Optional[str] = None

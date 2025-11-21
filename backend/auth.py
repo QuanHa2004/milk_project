@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 
 import model
-import schema
+import schema_customer as schema_customer
 from database import get_db
 
 from dotenv import load_dotenv
@@ -91,7 +91,7 @@ def get_current_user(
 
 
 @router.post("/register")
-def register(request: schema.UserCreate, db: Session = Depends(get_db)):
+def register(request: schema_customer.UserCreate, db: Session = Depends(get_db)):
     if not request.password:
         raise HTTPException(status_code=400, detail="Mật khẩu không được để trống")
 
@@ -164,7 +164,7 @@ def refresh_token(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Refresh token không hợp lệ")
 
 
-@router.get("/current_user", response_model=schema.UserResponse)
+@router.get("/current_user", response_model=schema_customer.UserResponse)
 def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
     try:

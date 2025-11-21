@@ -2,13 +2,13 @@ from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 import model
 from database import get_db
-import schema
+import schema_customer as schema_customer
 from auth import get_current_user
 
 customer = APIRouter(prefix="", tags=["Authentication"])
 
 
-@customer.get("/products", response_model=list[schema.ProductResponse])
+@customer.get("/products", response_model=list[schema_customer.ProductResponse])
 def get_products(db: Session = Depends(get_db)):
     return db.query(model.Product).all()
 
@@ -29,13 +29,13 @@ def get_product_detail(product_id: int, db: Session = Depends(get_db)):
     }
 
 
-@customer.get("/categories", response_model=list[schema.CategoryResponse])
+@customer.get("/categories", response_model=list[schema_customer.CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):
     categories = db.query(model.Category).all()
     return categories
 
 
-@customer.get("/{category_id}/products", response_model=list[schema.ProductResponse])
+@customer.get("/{category_id}/products", response_model=list[schema_customer.ProductResponse])
 def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
     category = (
         db.query(model.Category)
@@ -52,7 +52,7 @@ def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
 
 
 @customer.get(
-    "/products/search/{search_name}", response_model=list[schema.ProductResponse]
+    "/products/search/{search_name}", response_model=list[schema_customer.ProductResponse]
 )
 def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
     products = (
@@ -68,7 +68,7 @@ def get_products_by_search(search_name: str, db: Session = Depends(get_db)):
 
 @customer.post("/carts/add")
 def add_to_cart(
-    item: schema.CartItemCreate,
+    item: schema_customer.CartItemCreate,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
@@ -102,10 +102,8 @@ def add_to_cart(
     )
 
     if cart_item:
-        # ✔️ Nếu đã tồn tại → cập nhật số lượng
         cart_item.quantity += item.quantity
     else:
-        # ✔️ Nếu chưa có → tạo mới
         new_item = model.CartItem(
             cart_id=cart.cart_id,
             product_id=item.product_id,
@@ -154,9 +152,9 @@ def remove_from_cart(
     return {"message": f"Đã xóa sản phẩm {product_id} khỏi giỏ hàng"}
 
 
-@customer.put("/carts/update", response_model=schema.CartItemResponse)
+@customer.put("/carts/update", response_model=schema_customer.CartItemResponse)
 def update_cart_item(
-    item: schema.CartItemUpdate,
+    item: schema_customer.CartItemUpdate,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
