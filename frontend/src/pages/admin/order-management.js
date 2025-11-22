@@ -3,38 +3,51 @@ import SideBar from "../../component/admin/side-bar";
 
 export default function OrderManagement() {
   return (
-    <div className="relative flex min-h-screen">
+    <div className="relative flex min-h-screen bg-[#FDFBF7] dark:bg-[#1C1917]">
       <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
         <div className="ml-64 flex flex-row min-h-screen">
-          <SideBar />
-          <main className="flex-1 p-8">
+          <div className="fixed inset-y-0 left-0 z-50 w-64">
+             <SideBar />
+          </div>
+          
+          <main className="flex-1 p-8 w-full">
             <div className="w-full max-w-7xl mx-auto">
+              
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <div className="flex min-w-72 flex-col gap-1">
-                  <p className="text-gray-900 dark:text-white text-3xl font-black">
+                  <p className="text-stone-800 dark:text-stone-100 text-3xl font-black tracking-tight">
                     Quản lý đơn hàng
                   </p>
+                  <p className="text-stone-500 dark:text-stone-400 text-sm">
+                    Theo dõi và xử lý các đơn hàng mới nhất.
+                  </p>
                 </div>
-                <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
+                
+                <button className="flex items-center justify-center gap-2 rounded-xl h-10 px-6 bg-amber-900 text-white text-sm font-bold shadow-lg shadow-amber-900/20 hover:bg-amber-800 hover:-translate-y-0.5 transition-all duration-300">
+                  <span className="material-symbols-outlined text-[20px]">filter_list</span>
                   <span>Lọc</span>
                 </button>
               </div>
+
               <div className="flex flex-wrap items-end gap-4 mb-6">
                 <label className="flex flex-col min-w-40 h-12 w-full max-w-lg">
-                  <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-white dark:bg-background-dark border border-[#E0E0E0] dark:border-gray-700">
-                    <div className="text-[#617c89] flex items-center justify-center pl-4">
+                  <div className="flex w-full flex-1 items-stretch rounded-xl h-full bg-white dark:bg-[#292524] border border-stone-200 dark:border-stone-700 shadow-sm hover:shadow-md transition-all duration-300 focus-within:ring-2 focus-within:ring-amber-500/20 focus-within:border-amber-500 overflow-hidden">
+                    
+                    <div className="text-stone-400 flex items-center justify-center pl-4">
                       <span className="material-symbols-outlined">search</span>
                     </div>
+                    
                     <input
-                      className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-[#617c89] px-2 text-base font-normal leading-normal"
-                      placeholder="Tìm đơn hàng"
-                      value=""
-                      readOnly
+                      className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-stone-700 dark:text-stone-200 focus:outline-0 border-none bg-transparent h-full placeholder:text-stone-400 px-3 text-base font-normal leading-normal"
+                      placeholder="Tìm theo mã đơn, tên khách hàng..."
                     />
                   </div>
                 </label>
               </div>
-              <OrderList />
+
+              <div className="bg-white dark:bg-[#292524] rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">
+                 <OrderList />
+              </div>
             </div>
           </main>
         </div>

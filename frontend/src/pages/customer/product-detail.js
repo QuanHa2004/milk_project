@@ -80,7 +80,7 @@ export default function ProductDetail() {
                                                 </button>
                                             </div>
                                         </div>
-                                        <button onClick={handleAdd}
+                                        <button onClick={(e) => handleAdd(e)}
                                             class="bg-primary text-white font-semibold py-3 px-6 rounded-lg mt-6 w-full lg:w-auto hover:bg-primary/90 transition-colors duration-300 shadow-md">
                                             Add to Cart
                                         </button>

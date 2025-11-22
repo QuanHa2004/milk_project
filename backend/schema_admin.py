@@ -17,7 +17,7 @@ class StatusEnum(str, Enum):
     delivered = "delivered"
     cancelled = "cancelled"
 
-
+# pydantic: tra ve frontend danh sach don hang, danh muc, san pham, ma giam gia, phieu nhap hang
 class OrderList(BaseModel):
     order_id: int
     full_name: str
@@ -37,7 +37,7 @@ class ProductList(BaseModel):
     is_deleted: bool
     is_hot: bool
     quantity: int = 0
-    expiration_date: Optional[datetime] = None
+    expiration_date: datetime
 
 
 class PromotionList(BaseModel):
@@ -51,7 +51,6 @@ class PromotionList(BaseModel):
     start_date: datetime
     end_date: datetime
     is_active: bool
-    created_by: str
 
 
 class RecentPromotionList(BaseModel):
@@ -66,4 +65,5 @@ class InvoiceList(BaseModel):
     supplier_name: str
     total_amount: Decimal
     created_at: datetime
+
  

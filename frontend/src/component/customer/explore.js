@@ -1,31 +1,5 @@
 import { useNavigate } from "react-router-dom";
 
-function CategoryCard({ cat }) {
-  const navigate = useNavigate();
-  
-  const handleClick = () => {
-    if (cat.link) navigate(cat.link);
-  };
-
-  return (
-    <div
-      onClick={handleClick}
-      className="flex flex-col justify-between bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer group w-full max-w-sm"
-    >
-      <div
-        className="h-48 bg-center bg-cover"
-        style={{ backgroundImage: `url("${cat.imageUrl}")` }}
-      ></div>
-      <div className="p-4 flex flex-col items-center">
-        <h3 className="text-xl font-bold text-[#111618] mb-2 text-center">{cat.title}</h3>
-        <button className="px-4 py-2 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors">
-          MUA NGAY
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function Explore() {
   const categories = [
     {
@@ -45,13 +19,30 @@ export default function Explore() {
     },
   ];
 
+  const navigate = useNavigate();
+
+  const handleClick = (category) => {
+    if (category.link) navigate(category.link);
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 justify-items-center">
-      {categories.map((cat, index) => (
-        <CategoryCard
-          key={index}
-          cat={cat}
-        />
+      {categories.map((category) => (
+        <div
+          onClick={() => handleClick(category)}
+          className="flex flex-col justify-between bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer group w-full max-w-sm"
+        >
+          <div
+            className="h-48 bg-center bg-cover"
+            style={{ backgroundImage: `url("${category.imageUrl}")` }}
+          ></div>
+          <div className="p-4 flex flex-col items-center">
+            <h3 className="text-xl font-bold text-[#111618] mb-2 text-center">{category.title}</h3>
+            <button className="px-4 py-2 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors">
+              MUA NGAY
+            </button>
+          </div>
+        </div>
       ))}
     </div>
   );

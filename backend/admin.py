@@ -1,11 +1,55 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func
+from sqlalchemy import func, extract
 from database import get_db
 import model
+from datetime import datetime
 import schema_admin as schema_admin
 
 admin = APIRouter(prefix="", tags=["Authentication"])
+
+
+# dashboard: bao cao doanh thu thang
+@admin.get("/admin/reports")
+def get_report(db: Session = Depends(get_db)):
+    now = datetime.now()
+    current_month = now.month
+    current_year = now.year
+
+    report = (
+        db.query(
+            func.sum(model.Order.total_amount).label("total_revenue"),
+            func.count(model.Order.order_id).label("total_orders"),
+        )
+        .filter(
+            model.Order.status == "delivered",
+            extract("month", model.Order.order_date) == current_month,
+            extract("year", model.Order.order_date) == current_year,
+        )
+        .first()
+    )
+
+    new_customer = (
+        db.query(func.count(model.User.user_id).label("new_customer"))
+        .filter(
+            model.User.role_id == 2,
+            extract("month", model.User.created_at) == current_month,
+            extract("year", model.User.created_at) == current_year,
+        )
+        .scalar()
+    )
+
+    total_revenue = report.total_revenue if report.total_revenue else 0
+    total_orders = report.total_orders if report.total_orders else 0
+    new_customer = new_customer if new_customer else 0
+    avg_value = (total_revenue / total_orders) if total_orders > 0 else 0
+
+    return {
+        "total_revenue": total_revenue,
+        "total_orders": total_orders,
+        "new_customer": new_customer,
+        "avg_value": avg_value,
+    }
 
 
 # hien thi danh sach don hang, danh muc, san pham, ma giam gia, phieu nhap hang
@@ -76,7 +120,9 @@ def get_products(db: Session = Depends(get_db)):
 
 @admin.get("/admin/promotions", response_model=list[schema_admin.PromotionList])
 def get_promotions(db: Session = Depends(get_db)):
-    promotions = db.query(model.Promotion).options(joinedload(model.Promotion.creator)).all()
+    promotions = (
+        db.query(model.Promotion).all()
+    )
 
     results = []
     for promotion in promotions:
@@ -91,14 +137,18 @@ def get_promotions(db: Session = Depends(get_db)):
             "start_date": promotion.start_date,
             "end_date": promotion.end_date,
             "is_active": promotion.is_active,
-            "created_by": promotion.creator.full_name,
         }
         results.append(item)
     return results
 
-@admin.get("/admin/recent_promotions", response_model=list[schema_admin.RecentPromotionList])
+
+@admin.get(
+    "/admin/recent_promotions", response_model=list[schema_admin.RecentPromotionList]
+)
 def get_promotions(db: Session = Depends(get_db)):
-    promotions = db.query(model.Promotion).options(joinedload(model.Promotion.creator)).all()
+    promotions = (
+        db.query(model.Promotion).options(joinedload(model.Promotion.creator)).all()
+    )
 
     results = []
     for promotion in promotions:

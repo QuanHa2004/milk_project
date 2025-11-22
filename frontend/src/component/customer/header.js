@@ -61,7 +61,9 @@ export default function Header() {
               </defs>
             </svg>
           </div>
-          <h2 className="text-secondary text-2xl font-bold leading-tight tracking-[-0.015em]">FreshMilk</h2>
+          <h1 className="text-xl font-black tracking-tight text-stone-800 dark:text-stone-100">
+            <span className="text-amber-800 dark:text-amber-600">Fresh Milk</span>
+          </h1>
         </div>
 
         <nav className="hidden md:flex items-center gap-9">

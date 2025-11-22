@@ -3,7 +3,6 @@ import useCart from "../../context/cart-context";
 export default function CartSummary({ showPaymentSection = false }) {
   const { cartItems } = useCart();
 
-  // Lọc chỉ những sản phẩm được chọn
   const selectedItems = cartItems.filter(item => item.selected);
 
   const total_amount = selectedItems.reduce(
@@ -17,7 +16,6 @@ export default function CartSummary({ showPaymentSection = false }) {
 
   return (
     <div className="space-y-4 mt-4">
-      {/* Danh sách sản phẩm */}
       <div className="border-b border-gray-200 dark:border-gray-700 pb-2">
         {cartItems.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">Chưa có sản phẩm nào!</p>
@@ -41,13 +39,11 @@ export default function CartSummary({ showPaymentSection = false }) {
         )}
       </div>
 
-      {/* Tổng tiền ước tính */}
       <div className="flex justify-between text-gray-600 dark:text-gray-300">
         <span>Tổng tiền ước tính</span>
         <span>{total_amount.toLocaleString('vi-VN')} VND</span>
       </div>
 
-      {/* Thuế */}
       <div className="flex justify-between text-gray-600 dark:text-gray-300">
         <span>Thuế</span>
         <span>{taxes.toLocaleString('vi-VN')} VND</span>
@@ -64,13 +60,10 @@ export default function CartSummary({ showPaymentSection = false }) {
 
       <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
 
-      {/* Tổng cộng */}
       <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
         <span>Tổng cộng</span>
         <span>{total.toLocaleString('vi-VN')} VND</span>
       </div>
-
-
     </div>
   );
 }

@@ -21,7 +21,6 @@ export default function Cart() {
 
         const token = localStorage.getItem("access_token");
 
-        // Chưa login → lưu redirect trước
         if (!token) {
             localStorage.setItem("post_login_redirect", "/carts");
             navigate("/login");
@@ -38,13 +37,11 @@ export default function Cart() {
             });
 
             if (!res.ok) {
-                // Token hết hạn hoặc không hợp lệ
                 localStorage.setItem("post_login_redirect", "/carts");
                 navigate("/login");
                 return;
             }
 
-            // Nếu token hợp lệ → đi thẳng tới checkout
             navigate("/checkout");
 
         } catch (err) {
