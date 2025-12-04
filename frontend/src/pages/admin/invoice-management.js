@@ -28,7 +28,7 @@ export default function InvoiceManagement() {
                 </div>
                 
                 <button 
-                  onClick={() => navigate('/admin/new-invoice')} 
+                  onClick={() => navigate('/admin/add-invoice')} 
                   className="flex items-center justify-center gap-2 rounded-xl h-10 px-5 bg-amber-900 text-white text-sm font-bold shadow-lg shadow-amber-900/20 hover:bg-amber-800 hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">

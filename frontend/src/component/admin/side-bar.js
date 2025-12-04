@@ -34,6 +34,35 @@ export default function SideBar() {
         <line x1="12" y1="22.08" x2="12" y2="12"></line>
       </svg>
     ),
+    user: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+    ),
+    manufacturer: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path>
+        <line x1="17" y1="13" x2="17" y2="13"></line>
+        <line x1="7" y1="13" x2="7" y2="13"></line>
+      </svg>
+    ),
+    supplier: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <rect x="1" y="3" width="15" height="13"></rect>
+        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+      </svg>
+    ),
+    // --- ICON MỚI: KHIẾU NẠI (Alert/Message) ---
+    complaint: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    ),
     promotion: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
@@ -68,6 +97,12 @@ export default function SideBar() {
     { icon: icons.order, text: "Đơn hàng", url: "/admin/order" },
     { icon: icons.category, text: "Danh mục", url: "/admin/category" },
     { icon: icons.product, text: "Sản phẩm", url: "/admin/product" },
+    { icon: icons.user, text: "Người dùng", url: "/admin/user" },
+    { icon: icons.manufacturer, text: "Nhà sản xuất", url: "/admin/manufacturer" },
+    { icon: icons.supplier, text: "Nhà cung cấp", url: "/admin/supplier" },
+    // --- MỤC MỚI: KHIẾU NẠI ---
+    { icon: icons.complaint, text: "Khiếu nại", url: "/admin/feedback" },
+    // -------------------------
     { icon: icons.promotion, text: "Mã giảm giá", url: "/admin/promotion" },
     { icon: icons.invoice, text: "Nhập hàng", url: "/admin/invoice" },
   ];
@@ -79,7 +114,7 @@ export default function SideBar() {
 
   return (
     <aside className="fixed top-0 left-0 h-screen w-64 bg-[#EFECE5] dark:bg-[#151413] border-r border-stone-300 dark:border-stone-800 flex flex-col z-50 shadow-sm">
-      
+
       <div className="h-20 flex items-center px-6 border-b border-stone-300 dark:border-stone-800">
         <div className="flex items-center gap-3 text-amber-900 dark:text-amber-500">
           <div className="p-2 bg-amber-200/50 dark:bg-amber-900/30 text-amber-900 dark:text-amber-500 rounded-xl">
@@ -101,8 +136,8 @@ export default function SideBar() {
               onClick={() => navigate(item.url)}
               className={`
                 w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden
-                ${active 
-                  ? "bg-amber-900 text-white shadow-lg shadow-amber-900/20" 
+                ${active
+                  ? "bg-amber-900 text-white shadow-lg shadow-amber-900/20"
                   : "text-stone-600 dark:text-stone-400 hover:bg-white/60 dark:hover:bg-stone-800 hover:text-amber-900 dark:hover:text-amber-400 hover:shadow-sm"
                 }
               `}
@@ -110,7 +145,7 @@ export default function SideBar() {
               <span className={`transition-transform duration-200 ${active ? "text-amber-100" : "text-stone-500 group-hover:text-amber-800 group-hover:scale-110"}`}>
                 {item.icon}
               </span>
-              
+
               <span>{item.text}</span>
 
               {active && (
@@ -123,11 +158,11 @@ export default function SideBar() {
 
       <div className="p-4 border-t border-stone-300 dark:border-stone-800">
         <div className="flex items-center gap-3 p-3 rounded-xl bg-white/50 border border-stone-300 dark:bg-stone-800 dark:border-stone-700 hover:bg-white hover:border-amber-300 transition-all cursor-pointer shadow-sm">
-          
+
           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-800 to-amber-600 flex items-center justify-center text-white font-bold shadow-sm border-2 border-white/50 dark:border-stone-700">
             A
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-stone-800 dark:text-stone-100 truncate">
               Admin
@@ -137,8 +172,8 @@ export default function SideBar() {
             </p>
           </div>
 
-          <button 
-            onClick={() => alert("Đăng xuất")} 
+          <button
+            onClick={() => alert("Đăng xuất")}
             className="text-stone-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors p-1.5 rounded-lg"
             title="Đăng xuất"
           >

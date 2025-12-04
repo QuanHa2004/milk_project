@@ -2,7 +2,7 @@ import SideBar from "../../component/admin/side-bar";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export default function NewInvoice() {
+export default function AddInvoice() {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
 

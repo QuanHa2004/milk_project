@@ -101,6 +101,16 @@ export default function Header() {
 
       <div className="flex items-center gap-4">
 
+        {/* --- TÍNH NĂNG MỚI: SUPPORT BUTTON --- */}
+        <div className="relative group">
+          <button onClick={() => navigate("/support")}
+            className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors"
+          >
+            <span className="material-symbols-outlined">support_agent</span>
+          </button>
+          
+        </div>
+        {/* ----------------------------------- */}
 
         <div className="relative">
           {currentUser?.full_name ? (
@@ -142,17 +152,6 @@ export default function Header() {
           )}
         </button>
 
-        {/* <button className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
-          <span className="material-symbols-outlined">inventory</span>
-        </button>
-
-        <button className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
-          <span className="material-symbols-outlined">list_alt</span>
-        </button>
-
-        <button className="relative flex items-center justify-center rounded-full h-10 w-10 bg-primary/20 text-secondary hover:bg-primary/30 transition-colors">
-          <span className="material-symbols-outlined">history</span>
-        </button> */}
       </div>
     </header>
 

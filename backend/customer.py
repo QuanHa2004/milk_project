@@ -256,3 +256,30 @@ def get_my_cart(db: Session = Depends(get_db), current_user=Depends(get_current_
         "items": items,
         "total_price": total_price,
     }
+
+@customer.put("/cart/item/{product_id}/status")
+def update_cart_item_status(
+    product_id: int,
+    status_update: schema_customer.CartItemStatusUpdate,
+    db: Session = Depends(get_db),
+    current_user: model.User = Depends(get_current_user) # Giả sử bạn có hàm lấy user hiện tại
+):
+    # 1. Tìm giỏ hàng của user
+    cart = db.query(model.Cart).filter(model.Cart.user_id == current_user.user_id).first()
+    if not cart:
+        raise HTTPException(status_code=404, detail="Cart not found")
+
+    # 2. Tìm sản phẩm trong giỏ hàng (CartItem)
+    cart_item = db.query(model.CartItem).filter(
+        model.CartItem.cart_id == cart.cart_id,
+        model.CartItem.product_id == product_id
+    ).first()
+
+    if not cart_item:
+        raise HTTPException(status_code=404, detail="Product not in cart")
+
+    # 3. Cập nhật trạng thái
+    cart_item.is_checked = status_update.is_checked # Map với cột is_checked trong DB
+    db.commit()
+    
+    return {"message": "Status updated successfully"}

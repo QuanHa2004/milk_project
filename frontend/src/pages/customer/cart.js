@@ -19,6 +19,13 @@ export default function Cart() {
             return;
         }
 
+        const hasCheckedItems = cartItems.some(item => item.isChecked === true);
+
+        if (!hasCheckedItems) {
+            alert("Vui lòng chọn ít nhất một sản phẩm để tiến hành thanh toán!");
+            return;
+        }
+
         const token = localStorage.getItem("access_token");
 
         if (!token) {

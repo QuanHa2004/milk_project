@@ -37,7 +37,6 @@ class UserResponse(UserBase):
         from_attributes = True
 
 
-
 # pydantic: hien thi danh sanh danh muc, san pham, tim kiem san pham
 class CategoryList(BaseModel):
     category_id: int
@@ -74,4 +73,8 @@ class CartItemResponse(CartItemBase):
 
     class Config:
         from_attributes = True
+
+
+class CartItemStatusUpdate(BaseModel):
+    is_checked: bool
 
